@@ -13,6 +13,11 @@ click = "^8.1.8"
 pydantic = "^2.10.4"
 
 
+[tool.poetry.scripts]
+aoc = "scripts.main:main"
+generate = "scripts.generate_year:main"
+
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
