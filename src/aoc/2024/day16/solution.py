@@ -1,7 +1,6 @@
 from collections import defaultdict
 from heapq import heappop, heappush
 from math import inf
-from time import sleep
 
 
 DIRS = [(1, 0), (0, 1), (-1, 0), (0, -1)]

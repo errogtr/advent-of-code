@@ -1,4 +1,4 @@
-from itertools import combinations, product
+from itertools import product
 
 
 with open("day25/data") as f:

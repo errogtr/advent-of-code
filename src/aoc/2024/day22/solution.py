@@ -1,6 +1,5 @@
 from collections import defaultdict
 from itertools import pairwise
-from tqdm import tqdm
 
 
 def generate(n):

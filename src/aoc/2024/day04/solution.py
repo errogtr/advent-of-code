@@ -1,6 +1,5 @@
 from itertools import product
 import re
-from time import time
 
 
 # positive lookahead for overlapping XMAS/SAMX substrings
