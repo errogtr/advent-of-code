@@ -14,16 +14,16 @@ class Args(BaseModel):
 
     def get_puzzle_module(self) -> str:
         return f"aoc.{self.year}.{self._day_dir()}.solution"
-    
+
     def get_input_path(self, root: Path, is_example: bool) -> str:
         puzzle_dir = root / str(self.year) / self._day_dir()
         if is_example:
             return puzzle_dir / "example"
         return puzzle_dir / "data"
-    
+
     def _day_dir(self):
         return "day" + str(self.day).rjust(2, "0")
-    
+
     @field_validator("year", mode="after")
     @classmethod
     def validate_year(cls, value: int) -> int:
