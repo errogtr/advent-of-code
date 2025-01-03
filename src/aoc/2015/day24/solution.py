@@ -4,7 +4,9 @@ from math import prod
 
 def entanglements(nums, s):
     for k in range(1, len(nums)):
-        if qe := min([prod(c) for c in combinations(nums, k) if sum(c) == s], default=0):
+        if qe := min(
+            [prod(c) for c in combinations(nums, k) if sum(c) == s], default=0
+        ):
             return qe
 
 

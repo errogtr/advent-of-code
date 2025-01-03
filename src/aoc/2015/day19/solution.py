@@ -8,7 +8,7 @@ with open("data") as f:
 molecules = set()
 for source, replacement in replacements:
     for sub in re.finditer(source, medicine):
-        molecules.add(medicine[:sub.start()] + replacement + medicine[sub.end():])
+        molecules.add(medicine[: sub.start()] + replacement + medicine[sub.end() :])
 print(len(molecules))
 
 # ==== PART 2 ====

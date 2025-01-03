@@ -21,4 +21,3 @@ house = defaultdict(int)
 for i in range(1, (target // 10) + 1):
     visit(house, i, 51 * i, 11)
 print(next(k for k, v in house.items() if v >= target))
-

@@ -6,7 +6,7 @@ from math import prod
 def spoons(N, k):
     """k-partitions of N -> equivalent to stars and bars problem"""
     for splits in combinations(range(N - 1), k - 1):
-        yield [b - a for a, b in zip((-1,) + splits, splits + (N-1,))]
+        yield [b - a for a, b in zip((-1,) + splits, splits + (N - 1,))]
 
 
 def score(X, I):
