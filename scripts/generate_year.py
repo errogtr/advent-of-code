@@ -8,7 +8,6 @@ from aoc.utils import day_dir
 @click.command()
 @click.argument("year", type=int)
 def main(year: int):
-    print(type(year))
     year_dir = ROOT_DIR / str(year)
 
     for day in range(1, 26):
