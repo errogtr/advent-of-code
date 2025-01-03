@@ -9,6 +9,7 @@ packages = [{include = "aoc", from = "src"}]
 [tool.poetry.dependencies]
 python = "3.13.*"
 ruff = "^0.8.5"
+click = "^8.1.8"
 
 
 [build-system]
