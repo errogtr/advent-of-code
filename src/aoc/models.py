@@ -2,6 +2,8 @@ from datetime import datetime
 from pathlib import Path
 from pydantic import BaseModel, Field, field_validator
 
+from aoc.utils import day_dir
+
 
 class Args(BaseModel):
     year: int = Field(ge=2015)
@@ -17,7 +19,7 @@ class Args(BaseModel):
         return puzzle_dir / "data"
 
     def _day_dir(self):
-        return "day" + str(self.day).rjust(2, "0")
+        return day_dir(self.day)
 
     @field_validator("year", mode="after")
     @classmethod
