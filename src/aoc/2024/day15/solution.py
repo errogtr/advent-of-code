@@ -9,6 +9,7 @@ class Tile:
     ROBOT = "@"
     WALL = "#"
 
+
 DIRS = {"^": -1j, ">": 1, "<": -1, "v": 1j}
 
 
@@ -25,13 +26,13 @@ def double_warehouse(grid):
     for y, row in enumerate(grid.splitlines()):
         for x, c in enumerate(row):
             if c == Tile.BOX:
-                warehouse[2*x + y * 1j] = Tile.LBOX
-                warehouse[2*x + 1 + y * 1j] = Tile.RBOX
+                warehouse[2 * x + y * 1j] = Tile.LBOX
+                warehouse[2 * x + 1 + y * 1j] = Tile.RBOX
             elif c == Tile.ROBOT:
-                warehouse[2*x + y * 1j] = Tile.ROBOT
-                warehouse[2*x + 1 + y * 1j] = Tile.EMPTY
+                warehouse[2 * x + y * 1j] = Tile.ROBOT
+                warehouse[2 * x + 1 + y * 1j] = Tile.EMPTY
             else:  # c in "#."
-                warehouse[2*x + y * 1j] = warehouse[2*x + 1 + y * 1j] = c
+                warehouse[2 * x + y * 1j] = warehouse[2 * x + 1 + y * 1j] = c
     return warehouse
 
 
@@ -62,7 +63,7 @@ for dz in dirs:
         warehouse[curr_z + dz] = warehouse[curr_z]
         warehouse[curr_z] = Tile.EMPTY
         curr_z += dz
-    
+
 print(gps(warehouse, Tile.BOX))
 
 
@@ -79,11 +80,11 @@ for dz in dirs:
             continue
         match warehouse[w]:
             case Tile.LBOX:
-                boxes.extend([w, w+1])
-                queue += [w, w+1]
+                boxes.extend([w, w + 1])
+                queue += [w, w + 1]
             case Tile.RBOX:
-                boxes.extend([w, w-1])
-                queue += [w, w-1]
+                boxes.extend([w, w - 1])
+                queue += [w, w - 1]
             case Tile.EMPTY:
                 move = True
             case Tile.WALL:
@@ -92,8 +93,8 @@ for dz in dirs:
 
     if move:
         for box in reversed(boxes):
-            warehouse[box+dz] = warehouse[box]
+            warehouse[box + dz] = warehouse[box]
             warehouse[box] = Tile.EMPTY
         curr_z += dz
-  
+
 print(gps(warehouse, Tile.LBOX))

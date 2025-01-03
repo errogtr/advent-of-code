@@ -32,7 +32,7 @@ for u, links_u in links.items():
 
         if v in clique_u or clique_u - set(links_v):
             continue
-        
+
         clique_u.add(v)
         for w in links_v:
             links_w = links[w]

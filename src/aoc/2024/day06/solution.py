@@ -6,12 +6,7 @@ DOWN = (0, 1)
 LEFT = (-1, 0)
 RIGHT = (1, 0)
 
-CHANGES = {
-    UP: RIGHT,
-    RIGHT: DOWN,
-    DOWN: LEFT,
-    LEFT: UP
-}
+CHANGES = {UP: RIGHT, RIGHT: DOWN, DOWN: LEFT, LEFT: UP}
 
 
 def parse(grid):
@@ -24,7 +19,6 @@ def parse(grid):
                 case "^":
                     start = (x, y)
     return start, obstacles
-
 
 
 with open("day06/data") as f:

@@ -6,7 +6,7 @@ with open("day25/data") as f:
 
 keys, locks = [], []
 for schematic in schematics:
-    rows  = schematic.split()
+    rows = schematic.split()
     first_row, *_ = rows
     if first_row.count("#") == 0:
         keys.append(rows)
@@ -22,7 +22,7 @@ for k, l in product(range(len(keys)), range(len(locks))):
     unique_pairs.add((k, l))
     key = keys[k]
     lock = locks[l]
-    
+
     Ly = len(key)
     for col_k, col_l in zip(zip(*key), zip(*lock)):
         if "".join(col_k).count("#") + "".join(col_l).count("#") > Ly:

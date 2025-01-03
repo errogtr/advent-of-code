@@ -16,7 +16,7 @@ with open("day10/data") as f:
     for y, row in enumerate(f.read().splitlines()):
         for x, h in enumerate(row):
             guide[(x, y)] = int(h)
-            if h == '0':
+            if h == "0":
                 trailheads.append((x, y))
 
 
@@ -32,7 +32,7 @@ for xp, yp in trailheads:
             if is_peak and (x, y) not in peaks:
                 peaks.add((x, y))
                 scores += 1
-    
+
 # ==== PART 1 ====
 print(scores)
 

@@ -7,11 +7,11 @@ def manhattan(z, w):
 
 def get_neighborhood(z, min_pico, max_pico):
     neighbors = set()
-    for r in range(min_pico, max_pico+1):
+    for r in range(min_pico, max_pico + 1):
         for k in range(r):
-            neighbors.add(z + k + (k-r) * 1j)
+            neighbors.add(z + k + (k - r) * 1j)
             neighbors.add(z - k + r + k * 1j)
-            neighbors.add(z - k + (r-k) * 1j)
+            neighbors.add(z - k + (r - k) * 1j)
             neighbors.add(z + k - r - k * 1j)
     return neighbors
 

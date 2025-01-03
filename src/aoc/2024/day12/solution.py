@@ -3,9 +3,9 @@ DIRS = [RIGHT, DOWN, LEFT, UP]
 CORNERS = [
     (UP, RIGHT),  # top right
     (UP, LEFT),  # top left
-    (DOWN, RIGHT), # bottom right
+    (DOWN, RIGHT),  # bottom right
     (DOWN, LEFT),  # bottom left
-    ]
+]
 
 
 def get_nn(x, y, plant_xy, garden):
@@ -18,7 +18,7 @@ def get_nn(x, y, plant_xy, garden):
 
 
 def get_edges(region):
-    """ num-of-edges = num-of-corners for polygons """
+    """num-of-edges = num-of-corners for polygons"""
     return sum(get_corners(x, y, region) for x, y in region)
 
 
@@ -29,13 +29,13 @@ def get_corners(x, y, region):
 
 def is_corner(x, y, dx1, dy1, dx2, dy2, region):
     """
-        yx.
-        xA.
-        ...
+    yx.
+    xA.
+    ...
 
-        upper-left vertex of A is a corner if 
-        -   both x's are different from A (external corner)
-        -   both x's equal A and y is different from A (internal corner)
+    upper-left vertex of A is a corner if
+    -   both x's are different from A (external corner)
+    -   both x's equal A and y is different from A (internal corner)
     """
 
     nn1 = x + dx1, y + dy1  # first nearest neighbor
@@ -45,11 +45,11 @@ def is_corner(x, y, dx1, dy1, dx2, dy2, region):
     # external corner
     if nn1 not in region and nn2 not in region:
         return True
-    
+
     # internal corner
     if nn1 in region and nn2 in region and diag not in region:
         return True
-    
+
     # not a corner
     return False
 
@@ -62,9 +62,9 @@ with open("day12/data") as f:
 
 
 # ==== PART 2 ====
-price = 0 
+price = 0
 regions = list()  # [{(x, y)}]
-visited = set()  
+visited = set()
 for (x, y), plant_xy in garden.items():
     if (x, y) in visited:
         continue
@@ -75,7 +75,7 @@ for (x, y), plant_xy in garden.items():
     while curr_xy:
         curr_x, curr_y = curr_xy.pop()
         region.add((curr_x, curr_y))
-        
+
         # get nearest neighbors of current location, if in the same region
         nn_xy = get_nn(curr_x, curr_y, plant_xy, garden)
 
@@ -85,7 +85,7 @@ for (x, y), plant_xy in garden.items():
         for nn_x, nn_y in nn_xy:
             if (nn_x, nn_y) not in visited:
                 curr_xy.add((nn_x, nn_y))
-        
+
         visited.add((curr_x, curr_y))
 
     price += len(region) * perimeter

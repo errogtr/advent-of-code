@@ -8,13 +8,13 @@ def count_stones(stones):
         if stone == 0:
             blink[1] += count
         elif (digits := int(log10(stone)) + 1) % 2 == 0:
-            # number of digits is even  
-            left, right = divmod(stone, 10**(digits // 2))
+            # number of digits is even
+            left, right = divmod(stone, 10 ** (digits // 2))
             blink[left] += count
             blink[right] += count
         else:  # number of digits is odd
             blink[2024 * stone] += count
-    return blink       
+    return blink
 
 
 with open("day11/data") as f:

@@ -3,9 +3,9 @@ from itertools import pairwise
 
 
 def generate(n):
-    n = (n << 6 ^ n) & 0xffffff
-    n = (n >> 5 ^ n) & 0xffffff
-    n = (n << 11 ^ n) & 0xffffff
+    n = (n << 6 ^ n) & 0xFFFFFF
+    n = (n >> 5 ^ n) & 0xFFFFFF
+    n = (n << 11 ^ n) & 0xFFFFFF
     return n
 
 
@@ -49,6 +49,6 @@ for buyer, quad_prices in buyer_quad_prices.items():
 
 
 max_price = 0
-for quad, y in X.items():    
+for quad, y in X.items():
     max_price = max(sum(y.values()), max_price)
 print(max_price)

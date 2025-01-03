@@ -38,14 +38,14 @@ while queue:
 
     if (curr_x, curr_y) == end:
         lowest_score = min(score, lowest_score)
-    
+
     nn = get_nn(score, curr_x, curr_y, curr_dx, curr_dy)
 
     if len(nn) > 2:
         crossroads.add((curr_x, curr_y))
 
-    for next_score, (next_x, next_y), (next_dx, next_dy) in nn: 
-        comes_from[(next_x, next_y, next_score)].append((curr_x, curr_y, score))   
+    for next_score, (next_x, next_y), (next_dx, next_dy) in nn:
+        comes_from[(next_x, next_y, next_score)].append((curr_x, curr_y, score))
         if (next_x, next_y) not in visited or (next_x, next_y) in crossroads:
             heappush(queue, (next_score, (next_x, next_y), (next_dx, next_dy)))
             visited.add((next_x, next_y))

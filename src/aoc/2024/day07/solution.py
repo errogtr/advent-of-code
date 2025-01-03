@@ -9,7 +9,7 @@ def parse(calibration):
 def search(test, nums, ops):
     if len(nums) == 1:
         return nums[0] == test
-    
+
     x, y, *others = nums
 
     if x > test:
@@ -31,4 +31,6 @@ with open("day07/data") as f:
 print(sum(test for test, nums in calibrations if search(test, nums, (add, mul))))
 
 # ==== PART 2 ====
-print(sum(test for test, nums in calibrations if search(test, nums, (add, mul, concat))))
+print(
+    sum(test for test, nums in calibrations if search(test, nums, (add, mul, concat)))
+)

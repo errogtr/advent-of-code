@@ -7,9 +7,9 @@ def possible(towel, designs):
         return True
 
     for design in designs:
-        if towel.startswith(design) and possible(towel[len(design):], designs):
+        if towel.startswith(design) and possible(towel[len(design) :], designs):
             return True
-        
+
     return False
 
 
@@ -21,9 +21,9 @@ def all_possible(towel, designs):
     possible = False
     for design in designs:
         if towel.startswith(design):
-            possible += all_possible(towel[len(design):], designs)
-            
-    return possible    
+            possible += all_possible(towel[len(design) :], designs)
+
+    return possible
 
 
 with open("day19/data") as f:

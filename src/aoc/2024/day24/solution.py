@@ -5,13 +5,14 @@ from operator import and_, or_, xor
 OP_PATTERN = re.compile(r"(\w+) (AND|OR|XOR) (\w+)")
 OPS = {"AND": and_, "OR": or_, "XOR": xor}
 
+
 def solve(res, inputs, ops_results):
     x, op, y = OP_PATTERN.search(ops_results[res]).groups()
-    
+
     if x in inputs and y in inputs:
         return OPS[op](int(inputs[x]), int(inputs[y]))
 
-    res =  OPS[op](solve(x, inputs, ops_results), solve(y, inputs, ops_results))
+    res = OPS[op](solve(x, inputs, ops_results), solve(y, inputs, ops_results))
     return res
 
 

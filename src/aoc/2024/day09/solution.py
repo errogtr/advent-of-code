@@ -24,7 +24,7 @@ while files:
             fragmented += files.pop()
             _ = free_space.pop()
         else:
-            fragmented += last[:-free_slot-1:-1]
+            fragmented += last[: -free_slot - 1 : -1]
             files[-1] = last[:-free_slot]
         free_slot = max(0, free_slot - l)
 print(sum(i * (ord(c) - 48) for i, c in enumerate(fragmented)))
@@ -50,17 +50,17 @@ while i > 0:
         id_j, size_j, slot_j = disk[j]
         if size_i <= slot_j:
             _ = disk.pop(i)
-            disk.insert(j+1, [id_i, size_i, slot_j - size_i])
+            disk.insert(j + 1, [id_i, size_i, slot_j - size_i])
             disk[j] = [id_j, size_j, 0]
             disk[i][2] += size_i + slot_i
             break
     else:
         i -= 1
     checked.add(id_i)
-    
+
 checksum = 0
 i = 0
 for id, size, slot in disk:
-    checksum += sum(id * j for j in range(i, i+size))
+    checksum += sum(id * j for j in range(i, i + size))
     i += size + slot
 print(checksum)

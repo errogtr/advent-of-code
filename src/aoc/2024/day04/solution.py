@@ -3,8 +3,8 @@ import re
 
 
 # positive lookahead for overlapping XMAS/SAMX substrings
-xmas = re.compile(r'(?=(XMAS|SAMX))')  
-mas = re.compile(r'MAS|SAM')
+xmas = re.compile(r"(?=(XMAS|SAMX))")
+mas = re.compile(r"MAS|SAM")
 
 
 def get_diagonal(schema):
@@ -24,7 +24,7 @@ Lx = len(wordsearch[0])
 horizontal = " ".join(wordsearch)
 vertical = " ".join("".join(l) for l in zip(*wordsearch))
 
-pad = "." * (Lx-1)
+pad = "." * (Lx - 1)
 padded = [pad + l + pad for l in wordsearch]
 diagonal = get_diagonal(padded)
 antidiagonal = get_diagonal(padded[::-1])
@@ -35,15 +35,13 @@ print(len(xmas.findall(full_schema)))
 
 # ==== PART 2 ====
 count = 0
-for x, y in product(range(1, Lx-1), range(1, Ly-1)):
+for x, y in product(range(1, Lx - 1), range(1, Ly - 1)):
     if wordsearch[y][x] == "A":
         diagonal = "".join(
-            wordsearch[y-1][x-1] + wordsearch[y][x] + wordsearch[y+1][x+1]
+            wordsearch[y - 1][x - 1] + wordsearch[y][x] + wordsearch[y + 1][x + 1]
         )
         antidiagonal = "".join(
-            wordsearch[y-1][x+1] + wordsearch[y][x] + wordsearch[y+1][x-1]
+            wordsearch[y - 1][x + 1] + wordsearch[y][x] + wordsearch[y + 1][x - 1]
         )
-        count += (
-            (mas.match(diagonal) and mas.match(antidiagonal)) is not None
-        )
+        count += (mas.match(diagonal) and mas.match(antidiagonal)) is not None
 print(count)

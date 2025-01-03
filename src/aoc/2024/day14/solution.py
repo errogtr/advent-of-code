@@ -36,14 +36,14 @@ print(
 
 
 # ==== PART 2 ====
-T = range(W*H)
+T = range(W * H)
 simulations = [simulate(robots, t) for t in T]
 tree_time = 0
 for i in range(1, min(W, H)):
     # target region
     a, b, c, d = 0 + i, W - i, 0 + i, H - i
 
-    # target region area 
+    # target region area
     area = (b - a) * (d - c)
 
     densities = [
