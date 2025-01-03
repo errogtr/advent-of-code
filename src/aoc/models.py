@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field, field_validator
 from aoc.utils import day_dir
 
 
-class Args(BaseModel):
+class YearDayModel(BaseModel):
     year: int = Field(ge=2015)
     day: int = Field(gt=0, le=25)
 
