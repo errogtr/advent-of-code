@@ -23,7 +23,7 @@ from collections import Counter
 DECODER = dict(zip([42, 17, 34, 39, 30, 37, 41, 25, 49, 45], "0123456789"))
 
 
-def parse(line: str) -> tuple[list[str], list[str]]:
+def parse(line: str) -> tuple[list[str], list[frozenset]]:
     signals, outputs = line.split(" | ")
     frozen_outs = [frozenset(out) for out in outputs.split()]
     return signals.split(), frozen_outs
