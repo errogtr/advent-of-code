@@ -20,8 +20,9 @@ def main(year: int):
 
         # create input files templates
         example_fp = day_dirname / "example"
-        with example_fp.open("w") as f:
-            f.write("")
+        if not example_fp.exists():
+            with example_fp.open("w") as f:
+                f.write("")
 
         data_fp = day_dirname / "data"
         with data_fp.open("w") as f:
@@ -29,8 +30,9 @@ def main(year: int):
 
         # create solution file template
         solution_fp = day_dirname / "solution.py"
-        with solution_fp.open("w") as f:
-            f.write(SOLUTIONS_TEMPLATE)
+        if not solution_fp.exists():
+            with solution_fp.open("w") as f:
+                f.write(SOLUTIONS_TEMPLATE)
 
 
 if __name__ == "__main__":
