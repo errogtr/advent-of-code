@@ -40,7 +40,7 @@ def main(input_data: Path):
         wires_count = Counter("".join(signals))
         encoded = {frozenset(s): sum(wires_count[d] for d in s) for s in signals}
         decoded = "".join(DECODER[encoded[out]] for out in outputs)
-        easy_digits += sum(d in ("1478") for d in decoded)
+        easy_digits += sum(d in "1478" for d in decoded)
         total += int(decoded)
 
     # ==== PART 1 ====
