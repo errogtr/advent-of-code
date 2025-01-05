@@ -29,8 +29,8 @@ def parse(line: str) -> tuple[list[str], list[frozenset]]:
     return signals.split(), frozen_outs
 
 
-def main(input_data: Path):
-    with input_data.open() as f:
+def main(input_path: Path):
+    with input_path.open() as f:
         data = f.read().splitlines()
 
     easy_digits = 0

@@ -17,8 +17,8 @@ def get_nns(z: complex, sites: set) -> list[complex]:
     return [z + dz for dz in DIRS if z + dz in sites]
 
 
-def main(input_data: Path):
-    with input_data.open() as f:
+def main(input_path: Path):
+    with input_path.open() as f:
         input_grid = f.read()
 
     octopus = parse(input_grid)

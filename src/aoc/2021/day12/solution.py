@@ -32,8 +32,8 @@ def visit(curr_cave: str, caves: dict, visits_count: Counter, max_visits: int) -
     return paths
 
 
-def main(input_data: Path):
-    with input_data.open() as f:
+def main(input_path: Path):
+    with input_path.open() as f:
         links = f.read().splitlines()
 
     caves = parse(links)

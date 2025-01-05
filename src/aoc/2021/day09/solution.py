@@ -16,8 +16,8 @@ def get_nns(z: complex) -> list[complex]:
     return [z + dz for dz in DIRS]
 
 
-def main(input_data: Path):
-    with input_data.open() as f:
+def main(input_path: Path):
+    with input_path.open() as f:
         input_text = f.read()
     heightmap = parse(input_text)
 

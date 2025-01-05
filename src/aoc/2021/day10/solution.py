@@ -9,8 +9,8 @@ ERROR_SCORES = dict(zip(RIGHT, [3, 57, 1197, 25137]))
 AUTOCOMPLETE_SCORES = dict(zip(LEFT, range(1, 5)))
 
 
-def main(input_data: Path):
-    with input_data.open() as f:
+def main(input_path: Path):
+    with input_path.open() as f:
         lines = f.read().splitlines()
 
     error_score = 0
