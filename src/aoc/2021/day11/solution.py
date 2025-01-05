@@ -24,7 +24,7 @@ def main(input_data: Path):
     octopus = parse(input_grid)
 
     all_nns = {z: get_nns(z, set(octopus)) for z in octopus}
-    
+
     flashes = 0
     for t in count(1):
         octopus = {z: energy + 1 for z, energy in octopus.items()}
@@ -33,13 +33,13 @@ def main(input_data: Path):
         flashed = set(flashing)
         while flashing:
             z_flash = flashing.pop(0)
-            
+
             for w in all_nns[z_flash]:
                 octopus[w] += 1
                 if octopus[w] > 9 and w not in flashed:
                     flashed.add(w)
                     flashing.append(w)
-        
+
         for z in flashed:
             octopus[z] = 0
 
