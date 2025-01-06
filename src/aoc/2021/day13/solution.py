@@ -38,7 +38,7 @@ def print_sheet(dots: set):
     Ly = max(y for _, y in dots) + 1
     sheet = "\n".join(
         "".join("#" if (x, y) in dots else "." for x in range(Lx)) for y in range(Ly)
-        )
+    )
     print(sheet)
     print()
 
@@ -46,9 +46,9 @@ def print_sheet(dots: set):
 def main(input_path: Path):
     with input_path.open() as f:
         input_text = f.read()
-    
+
     dots, instructions = parse(input_text)
-    
+
     # ==== PART 1 ====
     dots = fold(dots, [instructions[0]])
     print(len(dots))
