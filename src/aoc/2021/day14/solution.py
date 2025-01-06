@@ -9,24 +9,18 @@ def parse(input_text: str) -> tuple[str, dict[str, str]]:
     return template, insertions
 
 
-def insert(pair_counts: Counter, insertions: dict[str, str], n: int) -> Counter:
+def insert(template: Counter, insertions: dict[str, str], n: int) -> Counter:
+    pair_counts = Counter("".join(pair) for pair in pairwise(template))
+    element_counts = Counter(template)
     for _ in range(n):
         insertion_counts = Counter()
         for (l, r), count in pair_counts.items():
-            pair_l = l + insertions[l + r]
-            pair_r = insertions[l + r] + r
-            insertion_counts[pair_l] += count
-            insertion_counts[pair_r] += count
+            insertion = insertions[l + r]
+            insertion_counts[l + insertion] += count
+            insertion_counts[insertion + r] += count
+            element_counts[insertion] += count
         pair_counts = insertion_counts
-    return pair_counts
-
-
-def elements(pair_counts: Counter, first: str, last: str) -> int:
-    element_counts = Counter({first: 1, last: 1})
-    for (l, r), count in pair_counts.items():
-        element_counts[l] += count
-        element_counts[r] += count   
-    most_common, *_, least_common = [c // 2 for _, c in element_counts.most_common()]
+    most_common, *_, least_common = [c for _, c in element_counts.most_common()]
     return most_common - least_common
 
 
@@ -35,11 +29,9 @@ def main(input_path: Path):
         input_text = f.read()
 
     template, insertions = parse(input_text)
-    first, *_, last = template
-    template_counts = Counter("".join(pair) for pair in pairwise(template))
 
     # ==== PART 1 ====
-    print(elements(insert(template_counts, insertions, 10), first, last))
+    print(insert(template, insertions, 10))
 
     # ==== PART 2 ====
-    print(elements(insert(template_counts, insertions, 40), first, last))
+    print(insert(template, insertions, 40))
