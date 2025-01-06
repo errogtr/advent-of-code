@@ -11,7 +11,7 @@ Map = dict[Coords, int]
 DIRS = [(1, 0), (0, 1), (-1, 0), (0, -1)]
 
 
-def parse(input_text: str) -> dict:
+def parse(input_text: str) -> tuple[Map, int, int]:
     input_lines = input_text.split()
     Lx = len(input_lines[0])
     Ly = len(input_lines)
