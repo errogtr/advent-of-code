@@ -70,5 +70,10 @@ def main(input_path: Path):
         hex_packet = f.read()
 
     packet = "".join(hex2bin(c).zfill(4) for c in hex_packet)
+    _, version, value = parse(packet, ops)
 
-    print(parse(packet, ops))    
+    # ==== PART 1 ====
+    print(version)    
+
+    # ==== PART 2 ====
+    print(value) 
