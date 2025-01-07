@@ -1,7 +1,6 @@
 from itertools import batched
 from math import prod
 from pathlib import Path
-from typing import Callable
 
 
 def hex2bin(c: str) -> str:
@@ -20,13 +19,20 @@ def parse(packet: str) -> tuple[int, int, int]:
         version, values, i = op_type_one(packet, version)
 
     match type_id:
-        case "000": value = sum(values)
-        case "001": value = prod(values)
-        case "010": value = min(values)
-        case "011": value = max(values)
-        case "101": value = gt(*values)
-        case "110": value = lt(*values)
-        case "111": value = eq(*values)
+        case "000":
+            value = sum(values)
+        case "001":
+            value = prod(values)
+        case "010":
+            value = min(values)
+        case "011":
+            value = max(values)
+        case "101":
+            value = gt(*values)
+        case "110":
+            value = lt(*values)
+        case "111":
+            value = eq(*values)
 
     return version, value, i
 
