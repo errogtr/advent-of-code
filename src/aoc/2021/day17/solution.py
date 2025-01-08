@@ -49,7 +49,7 @@ def main(input_path: Path):
     #           vx >= (-1 + sqrt(1 + 8 * x_min)) / 2
     #
     # - vy_0 >= y_min, otherwise it will fall outside target's y range at first step
-    # - vy_0 < -y_min + 1, otherwise it will fall outside target's y range the step after y becomes 0
+    # - vy_0 < -y_min - 1, otherwise it will fall outside target's y range the step after y becomes 0
 
     vx_range = range(ceil((-1 + sqrt(1 + 8 * x_min)) / 2), x_max + 1)
     vy_range = range(y_min, -y_min)
