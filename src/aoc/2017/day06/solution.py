@@ -5,8 +5,8 @@ def main(input_path: Path):
     with input_path.open() as f:
         blocks = dict(enumerate(map(int, f.read().split())))
     
-    seen = {"".join(map(str, blocks.values()))}
-    loop_start = None
+
+    seen = {"".join(map(str, blocks.values())): 0}
     cycles = 1
     while True:
         i, max_val = max(blocks.items(), key=lambda x: x[1])
@@ -18,8 +18,10 @@ def main(input_path: Path):
         state = "".join(map(str, blocks.values()))
         if state in seen:
             break
-        seen.add(state)
+        seen[state] = cycles
         cycles += 1
     
     print(cycles)
+
+    print(cycles - seen[state])
 
