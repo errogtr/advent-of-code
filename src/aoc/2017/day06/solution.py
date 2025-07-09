@@ -27,7 +27,9 @@ def main(input_path: Path):
         seen[s] = cycles
         cycles += 1
     
+    # ==== PART 1 ====
     print(cycles)
 
+    # ==== PART 2 ====
     print(cycles - seen[s])
 
