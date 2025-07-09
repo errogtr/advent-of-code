@@ -10,21 +10,18 @@ def main(input_path: Path):
     with input_path.open() as f:
         blocks = [int(x) for x in f.read().split()]
     
-    # this is the crucial data structure: {'state': 'first appearance'}
-    seen = {state(blocks): 0}
-    cycles = 1
-    while True:
+    # this is the crucial data structure: seen = {'state': 'first appearance'}
+    seen = dict()
+    cycles = 0
+    while (s := state(blocks)) not in seen:
+        seen[s] = cycles
         max_val = max(blocks)
         i = blocks.index(max_val)
         blocks[i] = 0
-        while max_val:
+        while max_val:  # I think this can be optimized
             i = (i + 1) % len(blocks)
             blocks[i] += 1
             max_val -= 1
-        s = state(blocks)
-        if s in seen:
-            break
-        seen[s] = cycles
         cycles += 1
     
     # ==== PART 1 ====
