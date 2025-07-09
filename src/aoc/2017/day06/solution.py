@@ -1,27 +1,33 @@
 from pathlib import Path
 
 
+def state(blocks: list[int]) -> str:
+    """ A state is a string representation of a list of memory blocks """
+    return "".join(str(b) for b in blocks)
+
+
 def main(input_path: Path):
     with input_path.open() as f:
-        blocks = dict(enumerate(map(int, f.read().split())))
+        blocks = [int(x) for x in f.read().split()]
     
-
-    seen = {"".join(map(str, blocks.values())): 0}
+    # this is the crucial data structure: {'state': 'first appearance'}
+    seen = {state(blocks): 0}
     cycles = 1
     while True:
-        i, max_val = max(blocks.items(), key=lambda x: x[1])
+        max_val = max(blocks)
+        i = blocks.index(max_val)
         blocks[i] = 0
         while max_val:
             i = (i + 1) % len(blocks)
             blocks[i] += 1
             max_val -= 1
-        state = "".join(map(str, blocks.values()))
-        if state in seen:
+        s = state(blocks)
+        if s in seen:
             break
-        seen[state] = cycles
+        seen[s] = cycles
         cycles += 1
     
     print(cycles)
 
-    print(cycles - seen[state])
+    print(cycles - seen[s])
 
