@@ -1,32 +1,44 @@
+from copy import copy
 from pathlib import Path
 
 
-def state(blocks: list[int]) -> str:
-    """ A state is a string representation of a list of memory blocks """
-    return "".join(str(b) for b in blocks)
+def distribute(blocks: list[int]) -> list[int]:
+    new_blocks = copy(blocks)
+    max_val = max(new_blocks)
+    i = new_blocks.index(max_val)
+    new_blocks[i] = 0
+    while max_val:  # I think this can be optimized
+        i = (i + 1) % len(new_blocks)
+        new_blocks[i] += 1
+        max_val -= 1
+    return new_blocks
 
 
 def main(input_path: Path):
     with input_path.open() as f:
         blocks = [int(x) for x in f.read().split()]
-    
-    # this is the crucial data structure: seen = {'state': 'first appearance'}
-    seen = dict()
-    cycles = 0
-    while (s := state(blocks)) not in seen:
-        seen[s] = cycles
-        max_val = max(blocks)
-        i = blocks.index(max_val)
-        blocks[i] = 0
-        while max_val:  # I think this can be optimized
-            i = (i + 1) % len(blocks)
-            blocks[i] += 1
-            max_val -= 1
-        cycles += 1
-    
+
+    # floyd's algoritm for cycle detection: https://tinyurl.com/35xmkz9p
+    slow = fast = blocks
+    cycle = 0
+    while True:
+        slow = distribute(slow)
+        fast = distribute(distribute(fast))
+        cycle += 1
+        if slow == fast:
+            break
+
+    fast = blocks
+    offset = 1
+    while slow != fast:
+        slow = distribute(slow)
+        fast = distribute(fast)
+        offset += 1
+        if slow == fast:
+            break
+
     # ==== PART 1 ====
-    print(cycles)
+    print(offset + cycle)
 
     # ==== PART 2 ====
-    print(cycles - seen[s])
-
+    print(cycle)
