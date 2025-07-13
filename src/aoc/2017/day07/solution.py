@@ -10,12 +10,14 @@ RE_LINKS = re.compile(r"\w+")
 
 def traverse(current, links, weights):
     curr_weight = weights[current]
-    
+
     if current not in links:
         return weights[current]
 
     subtree = [traverse(node, links, weights) for node in links[current]]
-    assert len(set(subtree)) == 1, list(zip([weights[l] for l in links[current]], subtree))
+    assert len(set(subtree)) == 1, list(
+        zip([weights[l] for l in links[current]], subtree)
+    )
 
     return curr_weight + sum(subtree)
 
