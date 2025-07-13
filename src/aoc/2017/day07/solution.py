@@ -10,18 +10,14 @@ RE_LINKS = re.compile(r"\w+")
 
 def traverse(current, links, weights):
     curr_weight = weights[current]
+    
     if current not in links:
         return weights[current]
 
     subtree = [traverse(node, links, weights) for node in links[current]]
-    if all(isinstance(v, int) for v in subtree):
-        if len(set(subtree)) > 1:
-            subtree_weights = [weights[l] for l in links[current]]
-            print(list(zip(subtree_weights, subtree)))
-        else:
-            subtree = curr_weight + sum(subtree)
+    assert len(set(subtree)) == 1, list(zip([weights[l] for l in links[current]], subtree))
 
-    return subtree
+    return curr_weight + sum(subtree)
 
 
 def main(input_path: Path):
@@ -45,4 +41,7 @@ def main(input_path: Path):
     print(root)
 
     # ==== PART 2 ====
-    traverse(root, links, weights)
+    try:
+        traverse(root, links, weights)
+    except AssertionError as e:
+        print(e)
