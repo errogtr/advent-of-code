@@ -4,17 +4,10 @@ from operator import add, eq, ge, gt, le, lt, ne, sub
 from pathlib import Path
 
 
-OP = {"inc": add, "dec": sub}
+OPS = {"inc": add, "dec": sub}
 
 
 COND = {"<": lt, ">": gt, "<=": le, ">=": ge, "==": eq, "!=": ne}
-
-
-def parse(instr: str):
-    op_full, cond_full = instr.split(" if ")
-    reg_x, op, x = op_full.split()
-    reg_y, op_cond, y = cond_full.split()
-    return reg_x, OP[op], int(x), reg_y, COND[op_cond], int(y)
 
 
 def main(input_path: Path):
@@ -24,9 +17,9 @@ def main(input_path: Path):
     registers = defaultdict(int)
     max_val = -inf
     for instr in data.splitlines():
-        reg_x, op, x, reg_y, op_cond, y = parse(instr)
-        if op_cond(registers[reg_y], y):
-            registers[reg_x] = op(registers[reg_x], x)
+        reg_x, op, x, _, reg_y, op_cond, y = instr.split()
+        if COND[op_cond](registers[reg_y], int(y)):
+            registers[reg_x] = OPS[op](registers[reg_x], int(x))
         max_val = max(max_val, registers[reg_x])
 
     # ==== PART 1 ====
