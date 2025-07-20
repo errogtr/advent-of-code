@@ -31,8 +31,6 @@ def main(input_path: Path):
     for _ in range(64):
         nums, pos, skip = single_round(lengths, n, nums, pos, skip)
 
-    knot_hash = "".join(
-        f"{reduce(xor, block):02x}" for block in batched(nums, 16)
-    )
+    knot_hash = "".join(f"{reduce(xor, block):02x}" for block in batched(nums, 16))
 
     print(knot_hash)
