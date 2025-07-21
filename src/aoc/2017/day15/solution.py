@@ -1,29 +1,25 @@
 from pathlib import Path
 import re
 
-
-def generate(generator, factor, mod):
-    while True:
-        generator = (generator * factor) % 2147483647
-        if generator % mod == 0:
-            yield generator
-
-
-def generate_A(generator, mod_A):
-    return generate(generator, 16807, mod_A)
-
-
-def generate_B(generator, mod_A):
-    return generate(generator, 48271, mod_A)
+from tqdm import tqdm
 
 
 def judge(n, seed_A, seed_B, mod_A, mod_B):
     gen_A, gen_B = seed_A, seed_B
     matches = 0
-    for _ in range(n):
-        gen_A = next(generate_A(gen_A, mod_A))
-        gen_B = next(generate_B(gen_B, mod_B))
-        matches += gen_A & 0xFFFF == gen_B & 0xFFFF
+    for _ in tqdm(range(n)):
+        while True:
+            gen_A = (gen_A * 16807) % 2147483647
+            if gen_A % mod_A == 0:
+                break
+
+        while True:
+            gen_B = (gen_B * 48271) % 2147483647
+            if gen_B % mod_B == 0:
+                break
+
+        if gen_A & 0xFFFF == gen_B & 0xFFFF:
+            matches += 1
     return matches
 
 
