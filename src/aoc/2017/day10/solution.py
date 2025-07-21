@@ -14,6 +14,15 @@ def single_round(lengths, n, nums, pos, skip):
     return nums, pos, skip
 
 
+def knot_hash(inputs, n=256):
+    lengths = [ord(c) for c in inputs] + [17, 31, 73, 47, 23]
+    nums, pos, skip = list(range(n)), 0, 0
+    for _ in range(64):
+        nums, pos, skip = single_round(lengths, n, nums, pos, skip)
+
+    return "".join(f"{reduce(xor, block):02x}" for block in batched(nums, 16))
+
+
 def main(input_path: Path):
     with input_path.open() as f:
         inputs = f.read()
@@ -22,15 +31,8 @@ def main(input_path: Path):
 
     # ==== PART 1 ====
     lengths = [int(x) for x in inputs.split(",")]
-    nums, pos, skip = single_round(lengths, n, list(range(n)), 0, 0)
+    nums, *_ = single_round(lengths, 256, list(range(n)), 0, 0)
     print(nums[0] * nums[1])
 
     # ==== PART 2 ====
-    lengths = [ord(c) for c in inputs] + [17, 31, 73, 47, 23]
-    nums, pos, skip = list(range(n)), 0, 0
-    for _ in range(64):
-        nums, pos, skip = single_round(lengths, n, nums, pos, skip)
-
-    knot_hash = "".join(f"{reduce(xor, block):02x}" for block in batched(nums, 16))
-
-    print(knot_hash)
+    print(knot_hash(inputs, n))
