@@ -24,7 +24,7 @@ def main(input_path: Path):
         pipes[node] = links.split(", ")
 
     # ==== PART 1 ====
-    print(len(find_group('0', pipes)))
+    print(len(find_group("0", pipes)))
 
     # ==== PART 2 ====
     starts = set(pipes)
@@ -33,4 +33,3 @@ def main(input_path: Path):
         starts -= find_group(starts.pop(), pipes)
         groups += 1
     print(groups)
-    

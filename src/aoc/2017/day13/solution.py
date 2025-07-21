@@ -19,6 +19,5 @@ def main(input_path: Path):
     # ==== PART 1 ====
     print(get_severity(firewall, delay=0))
 
-
     # ==== PART 2 ====
     print(next(delay for delay in count(1) if get_severity(firewall, delay) == 0))
