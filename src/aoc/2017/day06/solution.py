@@ -18,7 +18,7 @@ def main(input_path: Path):
     with input_path.open() as f:
         blocks = [int(x) for x in f.read().split()]
 
-    # floyd's algoritm for cycle detection: https://tinyurl.com/35xmkz9p
+    # floyd's algorithm for cycle detection: https://tinyurl.com/35xmkz9p
     slow = fast = blocks
     cycle = 0
     while True:
