@@ -21,7 +21,6 @@ def main(input_path: Path):
     with input_path.open() as f:
         instructions = [int(x) for x in f.readlines()]
 
-
     # ==== PART 1 ====
     print(solve(copy(instructions)))
 

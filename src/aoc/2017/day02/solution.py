@@ -10,4 +10,6 @@ def main(input_path: Path):
     print(sum(max(r) - min(r) for r in rows))
 
     # PART 2
-    print(sum(b // a for r in rows for a, b in combinations(sorted(r), 2) if b % a == 0))
+    print(
+        sum(b // a for r in rows for a, b in combinations(sorted(r), 2) if b % a == 0)
+    )

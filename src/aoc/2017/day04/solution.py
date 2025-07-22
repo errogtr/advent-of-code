@@ -14,4 +14,3 @@ def main(input_path: Path):
 
     # ==== PART 2 ====
     print(sum(len(sort(l)) == len(set(sort(l))) for l in passphrases))
-
