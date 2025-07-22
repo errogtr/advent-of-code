@@ -29,6 +29,6 @@ def main(input_path: Path):
 
     # ==== PART 1 ====
     print(judge(40_000_000, seed_A, seed_B, 1, 1))
-    
+
     # ==== PART  ====
     print(judge(5_000_000, seed_A, seed_B, 4, 8))
