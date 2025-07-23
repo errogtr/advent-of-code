@@ -1,8 +1,5 @@
-from copy import copy
-import os
 from pathlib import Path
 from string import ascii_uppercase
-from time import sleep
 
 
 UP, RIGHT, DOWN, LEFT = [-1j, 1, 1j, -1]
