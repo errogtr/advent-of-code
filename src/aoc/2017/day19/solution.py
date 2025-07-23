@@ -5,45 +5,39 @@ from string import ascii_uppercase
 from time import sleep
 
 
-UP, RIGHT, DOWN, LEFT = [(0, -1), (1, 0), (0, 1), (-1, 0)]
+UP, RIGHT, DOWN, LEFT = [-1j, 1, 1j, -1]
 
-TURNS = {
-    UP: [RIGHT, LEFT],
-    RIGHT: [UP, DOWN],
-    DOWN: [RIGHT, LEFT],
-    LEFT: [UP, DOWN]
-}
+TURNS = {UP: [RIGHT, LEFT], RIGHT: [UP, DOWN], DOWN: [RIGHT, LEFT], LEFT: [UP, DOWN]}
 
 
 def main(input_path: Path):
     with input_path.open() as f:
         diagram_raw = f.read().splitlines()
-    
-    lx = len(diagram_raw[0])
-    ly = len(diagram_raw)
 
     diagram = dict()
+    z_start = None
     for y, row in enumerate(diagram_raw):
         for x, c in enumerate(row):
-            diagram[(x, y)] = c
-    
-    x, y = next(i for i in range(lx) if diagram[(i, 0)] == "|"), 0
-    vx, vy = 0, 1
+            diagram[x + y * 1j] = c
+            if z_start is None and y == 0 and c == "|":
+                z_start = x
+
+    z, v_z = z_start, 1j
     line, letters, steps = "|", "", 0
-    visited = [(x, y, vx, vy)]
+    visited = {(z, v_z)}
     while line != " ":
         if line == "+":
-            for vnx, vny in TURNS[(vx, vy)]:
-                nx, ny = x + vnx, y + vny
-                if diagram[(nx, ny)] != " " and (nx, ny, vnx, vny) not in visited:
-                    x, y, vx, vy = nx, ny, vnx, vny
+            for v_nz in TURNS[v_z]:
+                nz = z + v_nz
+                if diagram[nz] != " " and (nz, v_nz) not in visited:
+                    z, v_z = nz, v_nz
                     break
         else:
-            x, y = x + vx, y + vy
+            z += v_z
             if line in ascii_uppercase:
                 letters += line
-        visited.append((x, y, vx, vy))
-        line = diagram[(x, y)]
+        visited.add((z, v_z))
+        line = diagram[z]
         steps += 1
 
     # ==== PART 1 ====
