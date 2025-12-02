@@ -19,7 +19,6 @@ def main(input_path: Path):
 
     print(zeroes)
 
-
     # ==== PART 2 ====
     pos = 50
     zeroes = 0
@@ -29,7 +28,7 @@ def main(input_path: Path):
         new_pos = pos + direction * rot
         if new_pos >= 100 or (pos > 0 and new_pos <= 0):
             zeroes += 1
-        
+
         pos = new_pos % 100
-        
+
     print(zeroes)
