@@ -11,17 +11,16 @@ def validate(id_ranges: list[tuple[int, int]], max_groups: int) -> int:
             min_digits = max(1, len(str(L)) // k)
             max_digits = len(str(R)) // k
             for d in range(min_digits, max_digits + 1):
-                M = (10 ** (d * k) - 1) // (10 ** d - 1)
+                M = (10 ** (d * k) - 1) // (10**d - 1)
 
                 nd_low = 10 ** (d - 1)
-                nd_high = 10 ** d - 1
+                nd_high = 10**d - 1
 
                 # Intersect with digit-range of n
                 n_low = max(ceil(L / M), nd_low)
-                n_high = min(R // M , nd_high)
+                n_high = min(R // M, nd_high)
 
-                invalid |= set(n*M for n in range(n_low, n_high + 1))
-
+                invalid |= set(n * M for n in range(n_low, n_high + 1))
 
     return sum(invalid)
 
