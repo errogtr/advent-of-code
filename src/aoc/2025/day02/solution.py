@@ -23,7 +23,7 @@ def validate(id_ranges: list[tuple[int, int]], max_reps: int) -> int:
             for d in range(min_digits, max_digits + 1):
                 M = (10 ** (d * k) - 1) // (10**d - 1)
 
-                # Intersect with digit-range of n
+                # n must have d digits, so it cannot exceed [10 ** (d - 1), 10**d - 1]
                 n_low = max(ceil(L / M), 10 ** (d - 1))
                 n_high = min(floor(R / M), 10**d - 1)
                 invalid |= set(n * M for n in range(n_low, n_high + 1))
