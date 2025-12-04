@@ -14,6 +14,9 @@ mypy = "^1.14.1"
 tqdm = "^4.67.1"
 pydantic = "^2.12.5"
 
+[tool.poetry.scripts]
+solve = "scripts.solve:main"
+generate = "scripts.generate_year:main"
 
 [build-system]
 requires = ["poetry-core"]

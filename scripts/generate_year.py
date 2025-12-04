@@ -9,7 +9,7 @@ from aoc.utils import day_dir
 @click.argument("year", type=int)
 def main(year: int):
     year_dir = ROOT_DIR / str(year)
-    
+
     max_day = 25 if year < 2025 else 12  # :(
     for day in range(1, max_day + 1):
         # validate year
