@@ -4,14 +4,13 @@ def total_joltage(data, seq_len):
         joltage = ""
         start, end = 0, len(bank) - seq_len + 1
         for i in range(seq_len):
-            window = bank[start:end+i]
+            window = bank[start : end + i]
             m = max(window)
             joltage += m
             start += window.find(m) + 1
         total += int(joltage)
 
     return total
-
 
 
 def main():
