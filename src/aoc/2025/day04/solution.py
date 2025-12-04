@@ -1,3 +1,7 @@
+from copy import copy
+from time import time
+
+
 NEIGH = [dx + 1j * dy for dx in (-1, 0, 1) for dy in (-1, 0, 1) if dx != 0 or dy != 0]
 
 
@@ -24,14 +28,21 @@ def main():
     print(sum(accessible(z, paper) for z in paper))
 
     # ==== PART 2 ====
-    count = len(paper)
-    while True:
-        removed = {z for z in paper if accessible(z, paper)}
-        if len(removed) == 0:
-            break
-        paper -= removed
-    print(count - len(paper))
+    papers_count = len(paper)
+    q = list(paper)
+    while q:
+        z = q.pop()
+        if z not in paper:
+            continue
+        if accessible(z, paper):
+            paper.remove(z)
+            for w in nn(z):
+                q.append(w)
+    print(papers_count - len(paper))
 
 
 if __name__ == "__main__":
+    start = time()
     main()
+    elapsed = time() - start
+    print(f"Elapsed: {elapsed:.3f}s")
