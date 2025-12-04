@@ -2,14 +2,14 @@ def total_joltage(data, seq_len):
     total = 0
     for bank in data.split("\n"):
         joltage = ""
-        start, end = 0, len(bank) - seq_len
-        while len(joltage) < seq_len:
-            window = bank[start:end+1]
+        start, end = 0, len(bank) - seq_len + 1
+        for i in range(seq_len):
+            window = bank[start:end+i]
             m = max(window)
             joltage += m
             start += window.find(m) + 1
-            end +=1
         total += int(joltage)
+
     return total
 
 
