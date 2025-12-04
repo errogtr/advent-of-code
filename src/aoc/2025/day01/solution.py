@@ -1,6 +1,5 @@
-from pathlib import Path
-
-from aoc.utils import read_data
+import click
+from aoc.utils import read_data, timer
 
 
 def parse(line: str) -> tuple[str, int]:
@@ -8,20 +7,18 @@ def parse(line: str) -> tuple[str, int]:
     return (-1) ** (direction == "L"), int(amount)
 
 
-def main():
-    data = read_data(__file__)
-    rotations = [parse(line) for line in data.splitlines()]
-
-    # ==== PART 1 ====
+@timer
+def part1(rotations):
     pos = 50
     zeroes = 0
     for direction, amount in rotations:
         pos = (pos + direction * amount) % 100
         zeroes += pos == 0
+    return zeroes
 
-    print(zeroes)
 
-    # ==== PART 2 ====
+@timer
+def part2(rotations):
     pos = 50
     zeroes = 0
     for direction, amount in rotations:
@@ -33,8 +30,20 @@ def main():
             zeroes += 1
 
         pos = new_pos % 100
+    return zeroes
 
-    print(zeroes)
+
+@click.command()
+@click.option("--example", is_flag=True)
+def main(example: bool):
+    data = read_data(__file__, example)
+    rotations = [parse(line) for line in data.splitlines()]
+
+    # ==== PART 1 ====
+    print(part1(rotations))
+
+    # ==== PART 2 ====
+    print(part2(rotations))
 
 
 if __name__ == "__main__":

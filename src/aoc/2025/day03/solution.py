@@ -1,3 +1,7 @@
+import click
+from aoc.utils import read_data, timer
+
+
 def total_joltage(data, seq_len):
     total = 0
     for bank in data.split("\n"):
@@ -13,15 +17,26 @@ def total_joltage(data, seq_len):
     return total
 
 
-def main():
-    with open("data") as f:
-        data = f.read()
+@timer
+def part1(data):
+    return total_joltage(data, 2)
+
+
+@timer
+def part2(data):
+    return total_joltage(data, 12)
+
+
+@click.command()
+@click.option("--example", is_flag=True)
+def main(example: bool):
+    data = read_data(__file__, example)
 
     # ==== PART 1 ====
-    print(total_joltage(data, 2))
+    print(part1(data))
 
     # ==== PART 2 ====
-    print(total_joltage(data, 12))
+    print(part2(data))
 
 
 if __name__ == "__main__":

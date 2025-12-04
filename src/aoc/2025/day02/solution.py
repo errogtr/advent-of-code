@@ -1,6 +1,8 @@
 from math import ceil, floor
 
-from aoc.utils import read_data
+import click
+
+from aoc.utils import read_data, timer
 
 
 def validate(id_ranges: list[tuple[int, int]], max_reps: int) -> int:
@@ -31,8 +33,20 @@ def validate(id_ranges: list[tuple[int, int]], max_reps: int) -> int:
     return sum(invalid)
 
 
-def main():
-    data = read_data(__file__)
+@timer
+def part1(id_ranges):
+    return validate(id_ranges, max_reps=2)
+
+
+@timer
+def part2(id_ranges, max_len):
+    return validate(id_ranges, max_reps=max_len)
+
+
+@click.command()
+@click.option("--example", is_flag=True)
+def main(example: bool):
+    data = read_data(__file__, example)
 
     max_len = 0  # max digits number
     id_ranges = list()  # list of int ranges [(lower bound, upper bound)]
@@ -42,10 +56,10 @@ def main():
         id_ranges.append((int(low), int(up)))
 
     # ==== PART 1 ====
-    print(validate(id_ranges, max_reps=2))
+    print(part1(id_ranges))
 
     # ==== PART 2 ====
-    print(validate(id_ranges, max_reps=max_len))
+    print(part2(id_ranges, max_len))
 
 
 if __name__ == "__main__":
