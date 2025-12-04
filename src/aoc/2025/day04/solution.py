@@ -1,16 +1,12 @@
-from aoc.utils import timer
+import click
+from aoc.utils import read_data, timer
 
 
-NEIGH = [dx + 1j * dy for dx in (-1, 0, 1) for dy in (-1, 0, 1) if dx != 0 or dy != 0]
-
-
-def nn(z: complex):
-    for dz in NEIGH:
-        yield z + dz
+NN = [dx + 1j * dy for dx in (-1, 0, 1) for dy in (-1, 0, 1) if dx != 0 or dy != 0]
 
 
 def accessible(z: complex, paper: set) -> bool:
-    return sum(w in paper for w in nn(z)) < 4
+    return sum(z + dz in paper for dz in NN) < 4
 
 
 @timer
@@ -28,14 +24,15 @@ def part2(paper):
             continue
         if accessible(z, paper):
             paper.remove(z)
-            for w in nn(z):
-                q.append(w)
+            for dz in NN:
+                q.append(z + dz)
     return papers_count - len(paper)
 
 
-def main():
-    with open("src/aoc/2025/day04/data") as f:
-        data = f.read()
+@click.command()
+@click.option("--example", is_flag=True)
+def main(example):
+    data = read_data(__file__, example)
 
     paper = set()
     for y, row in enumerate(data.splitlines()):
