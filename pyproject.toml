@@ -10,14 +10,8 @@ packages = [{include = "aoc", from = "src"}]
 python = "3.13.*"
 ruff = "^0.8.5"
 click = "^8.1.8"
-pydantic = "^2.10.4"
 mypy = "^1.14.1"
 tqdm = "^4.67.1"
-
-
-[tool.poetry.scripts]
-aoc = "scripts.main:main"
-generate = "scripts.generate_year:main"
 
 
 [build-system]
