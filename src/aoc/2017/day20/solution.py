@@ -1,95 +1,121 @@
 from collections import defaultdict
 from itertools import combinations
-from math import inf, sqrt
+from math import floor, inf, sqrt
 import re
 
+import click
+
+from aoc.utils import read_data, timer
 
 
-def parse(data):
-    return [int(x) for x in re.findall(r"-*\d+", data)]
+COMPONENTS = re.compile(r"(-*\d+),(-*\d+),(-*\d+)")
 
 
-def main(input_path):
-    with input_path.open() as f:
-        particles = [parse(data) for data in f.read().splitlines()]
+def parse(line):
+    p, v, a = line.split(", ")
+    p = tuple(map(int, COMPONENTS.search(p).groups()))
+    v = tuple(map(int, COMPONENTS.search(v).groups()))
+    a = tuple(map(int, COMPONENTS.search(a).groups()))
+    return p, v, a
 
-    acc = [abs(a_x) + abs(a_y) + abs(a_z) for *_, a_x, a_y, a_z in particles]
-    slow, _ = min(enumerate(acc), key=lambda x: x[1])
-    print(slow)
 
+def manhattan(x) -> int:
+    return sum(map(abs, x))
+
+
+def evolve(t, a, b, c):
+    return (t * (t + 1)) // 2 * a + t * b + c
+
+
+@timer
+def part1(particles):
+    magnitudes = [(manhattan(a), manhattan(v), manhattan(p)) for p, v, a in particles]
+    slow = min(range(len(particles)), key=lambda i: magnitudes[i])
+    return slow
+
+
+@timer
+def part2(particles):
     collisions = defaultdict(set)
-    for (i1, p1), (i2, p2) in combinations(enumerate(particles), 2):
-        if p1 == p2:
-            pass
-        x1, y1, z1, v_x1, v_y1, v_z1, a_x1, a_y1, a_z1 = p1
-        x2, y2, z2, v_x2, v_y2, v_z2, a_x2, a_y2, a_z2 = p2
-        A_x, A_y, A_z = (x2 - x1), (y2 - y1), (z2 - z1)
-        B_x, B_y, B_z = (
-            (v_x2 - v_x1 + (a_x2 - a_x1) / 2),
-            (v_y2 - v_y1 + (a_y2 - a_y1) / 2),
-            (v_z2 - v_z1 + (a_z2 - a_z1) / 2),
-        )
-        C_x, C_y, C_z = (a_x2 - a_x1) / 2, (a_y2 - a_y1) / 2, (a_z2 - a_z1) / 2
+    for (id_alpha, alpha), (id_beta, beta) in combinations(enumerate(particles), 2):
+        p_alpha, v_alpha, a_alpha = alpha
+        p_beta, v_beta, a_beta = beta
 
-        delta_x = B_x**2 - 4 * A_x * C_x
-        if delta_x < 0:
-            continue
-        delta_y = B_y**2 - 4 * A_y * C_y
-        if delta_y < 0:
-            continue
-        delta_z = B_z**2 - 4 * A_z * C_z
-        if delta_z < 0:
-            continue
+        x_alpha, y_alpha, z_alpha = p_alpha
+        vx_alpha, vy_alpha, vz_alpha = v_alpha
+        ax_alpha, ay_alpha, az_alpha = a_alpha
 
-        t_x, t_y, t_z = inf, inf, inf
-        if A_x != 0:
-            t_x_pos = (-B_x + sqrt(delta_x)) / (2 * A_x)
-            t_x_neg = (-B_x - sqrt(delta_x)) / (2 * A_x)
-            t_x_min, t_x_max = min(t_x_pos, t_x_neg), max(t_x_pos, t_x_neg)
-            t_x = t_x_min if t_x_min > 0 else t_x_max
-        elif B_x != 0:
-            t_x = -C_x / B_x
+        x_beta, y_beta, z_beta = p_beta
+        vx_beta, vy_beta, vz_beta = v_beta
+        ax_beta, ay_beta, az_beta = a_beta
+
+        ax = ax_beta - ax_alpha
+        ay = ay_beta - ay_alpha
+        az = az_beta - az_alpha
+
+        bx = vx_beta - vx_alpha
+        by = vy_beta - vy_alpha
+        bz = vz_beta - vz_alpha
+
+        cx = x_beta - x_alpha
+        cy = y_beta - y_alpha
+        cz = z_beta - z_alpha
+
+        # test for x direction
+        t_coll = None
+        if ax == 0:
+            if bx == 0 or cx % bx != 0:
+                continue
+            t_coll = -cx // bx
         else:
-            continue
+            D = (ax + 2 * bx) ** 2 - 8 * ax * cx
+            if D < 0:
+                continue
+            s = floor(sqrt(D))
+            if s * s != D:
+                continue
 
-        if t_x <= 0 or t_x != int(t_x):
-            continue
+            t_1, t_2 = -inf, -inf
+            if (-ax - 2 * bx - s) % (2 * ax) == 0:
+                t_1 = (-ax - 2 * bx - s) // (2 * ax)
+            if (-ax - 2 * bx + s) % (2 * ax) == 0:
+                t_2 = (-ax - 2 * bx + s) // (2 * ax)
 
-        if A_y != 0:
-            t_y_pos = (-B_y + sqrt(delta_y)) / (2 * A_y)
-            t_y_neg = (-B_y - sqrt(delta_y)) / (2 * A_y)
-            t_y_min, t_y_max = min(t_y_pos, t_y_neg), max(t_y_pos, t_y_neg)
-            t_y = t_y_min if t_y_min > 0 else t_y_max
-        elif B_y != 0:
-            t_y = -C_y / B_y
-        else:
-            continue
+            t_min = min(t_1, t_2)
+            t_max = max(t_1, t_2)
 
-        if t_y == int(t_y):
-            pass
+            if t_min >= 0:
+                t_coll = t_min
+            elif t_max >= 0:
+                t_coll = t_max
+            else:
+                continue
 
-        if A_z != 0:
-            t_z_pos = (-B_z + sqrt(delta_z)) / (2 * A_z)
-            t_z_neg = (-B_z - sqrt(delta_z)) / (2 * A_z)
-            t_z_min, t_z_max = min(t_z_pos, t_z_neg), max(t_z_pos, t_z_neg)
-            t_z = t_z_min if t_z_min > 0 else t_z_max
-        elif B_z != 0:
-            t_z = -C_z / B_z
-        else:
-            continue
+        if evolve(t_coll, ay, by, cy) == 0 and evolve(t_coll, az, bz, cz) == 0:
+            collisions[t_coll] |= {id_alpha, id_beta}
 
-        print(t_x, t_y, t_z)
+    particle_ids = set(range(len(particles)))
+    for t in sorted(collisions):
+        for id in collisions[t]:
+            if id in particle_ids:
+                particle_ids.remove(id)
 
-        if (
-            t_x == t_y == t_z and t_x > 0
-        ):  # or (t_x == inf and t_y == t_z) or (t_y == inf and t_x == t_z) or (t_z == inf and t_x == t_y) or (t_x == t_y == inf) or (t_x == t_z == inf) or (t_y == t_z == inf):
-            print(t_x)
-            collisions[t_x] |= {i1, i2}
+    return len(particle_ids)
 
-    removed = {i: False for i in range(len(particles))}
-    for t, collided in sorted(collisions.items()):
-        remaining = [p for p in collided if not removed[p]]
-        if len(remaining) > 1:
-            for i in remaining:
-                removed[i] = True
-    print(sum(not r for r in removed.values()))
+
+@click.command()
+@click.option("--example", is_flag=True)
+def main(example):
+    data = read_data(__file__, example)
+
+    particles = [parse(line) for line in data.splitlines()]
+
+    # ==== PART 1 ====
+    print(part1(particles))
+
+    # ==== PART 2 ====
+    print(part2(particles))
+
+
+if __name__ == "__main__":
+    main()
