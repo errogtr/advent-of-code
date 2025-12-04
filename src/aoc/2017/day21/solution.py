@@ -13,7 +13,7 @@ def main(input_path: Path):
     for line in data_raw:
         src, dst = line.split(" => ")
         rules[src] = dst
-    
+
     image = [list(".#."), list("..#"), list(".##")]
     iterations = 1
     for _ in range(iterations):
@@ -24,6 +24,10 @@ def main(input_path: Path):
             patches = list()
             for i in range(0, size, 3):
                 for j in range(0, size, 3):
-                    patch = [image[i][j:j+3], image[i+1][j:j+3], image[i+2][j:j+3]]
+                    patch = [
+                        image[i][j : j + 3],
+                        image[i + 1][j : j + 3],
+                        image[i + 2][j : j + 3],
+                    ]
                     patches.append(patch)
                     print_img(patch)

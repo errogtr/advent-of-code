@@ -28,7 +28,7 @@ def main():
         turns, rot = divmod(amount, 100)
         zeroes += turns
         new_pos = pos + direction * rot
-   
+
         if new_pos >= 100 or (pos > 0 and new_pos <= 0):
             zeroes += 1
 
