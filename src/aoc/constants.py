@@ -5,9 +5,33 @@ ROOT_DIR = Path(__file__).parent
 
 
 # solutions.py template
-SOLUTIONS_TEMPLATE = """from pathlib import Path
+SOLUTIONS_TEMPLATE = """import click
+from aoc.utils import read_data, timer
 
 
-def main(input_path: Path):
-    pass    
+@timer
+def part1(*args, **kwargs):
+    pass
+
+
+@timer
+def part2(*args, **kwargs):
+    pass
+
+
+@click.command()
+@click.option("--example", is_flag=True)
+def main(example: bool):
+    data = read_data(__file__, example)
+
+    # ==== PART 1 ====
+    print(part1(...))
+
+    # ==== PART 2 ====
+    print(part2(...))
+
+
+if __name__ == "__main__":
+    main()
+
 """
