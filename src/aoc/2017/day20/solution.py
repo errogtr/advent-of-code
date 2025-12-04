@@ -1,11 +1,8 @@
 from collections import defaultdict
-from copy import copy
-from itertools import combinations, count
-from math import inf, prod, sqrt
-from pathlib import Path
+from itertools import combinations
+from math import inf, sqrt
 import re
 
-from tqdm import tqdm
 
 
 def parse(data):
