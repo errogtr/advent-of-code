@@ -20,7 +20,7 @@ def part2(intervals):
         if not merged_intervals:
             merged_intervals.append((l, r))
             continue
-        
+
         prev_l, prev_r = merged_intervals[-1]
         if l <= prev_r:
             merged_intervals[-1] = (prev_l, max(r, prev_r))
