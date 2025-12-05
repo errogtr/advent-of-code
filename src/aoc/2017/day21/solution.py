@@ -36,8 +36,7 @@ def enhance(img, img_size, s, rules):
             patch = [row[j : j + s] for row in img[i : i + s]]
             enhanced_patch = separate(rules[glue(patch)])
             for k in range((s + 1)):
-                for l in range((s + 1)):
-                    enhanced[k + (s + 1) * (i // s)].append(enhanced_patch[k][l])
+                enhanced[k + (s + 1) * (i // s)] += enhanced_patch[k]
     return enhanced
 
 
