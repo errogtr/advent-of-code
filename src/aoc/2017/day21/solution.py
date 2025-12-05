@@ -16,28 +16,18 @@ def separate(glued_img):
     return [list(line) for line in glued_img.split("/")]
 
 
-def rotate(glued_img, rotations):
-    img = separate(glued_img)
-    size = len(img)
-    for _ in range(rotations):
-        rotated = [list() for _ in range(size)]
-        for i in range(size):
-            for j in range(size):
-                rotated[i].append(img[size - j - 1][i])
-        img = deepcopy(rotated)
-    return glue(img)
-
-
 def rotate_90(glued_img):
-    return rotate(glued_img, rotations=1)
+    img = separate(glued_img)
+    rotated = list(zip(*img[::-1]))
+    return glue(rotated)
 
 
 def rotate_180(glued_img):
-    return rotate(glued_img, rotations=1)
+    return rotate_90(rotate_90(glued_img))
 
 
 def rotate_270(glued_img):
-    return rotate(glued_img, rotations=1)
+    return rotate_90(rotate_90(rotate_90(glued_img)))
 
 
 def flip_v(glued_img):
@@ -69,38 +59,38 @@ def main(example):
     for line in data.splitlines():
         src, dst = line.split(" => ")
         rules[src] = dst
-        rules[rotate(src, 1)] = dst
-        rules[rotate(src, 2)] = dst
-        rules[rotate(src, 3)] = dst
+        rules[rotate_90(src)] = dst
+        rules[rotate_180(src)] = dst
+        rules[rotate_270(src)] = dst
         rules[flip_v(src)] = dst
-        rules[rotate(flip_v(src), 1)] = dst
-        rules[rotate(flip_v(src), 2)] = dst
-        rules[rotate(flip_v(src), 3)] = dst
+        rules[rotate_90(flip_v(src))] = dst
+        rules[rotate_180(flip_v(src))] = dst
+        rules[rotate_270(flip_v(src))] = dst
         rules[flip_h(src)] = dst
-        rules[rotate(flip_h(src), 1)] = dst
-        rules[rotate(flip_h(src), 2)] = dst
-        rules[rotate(flip_h(src), 3)] = dst
+        rules[rotate_90(flip_h(src))] = dst
+        rules[rotate_180(flip_h(src))] = dst
+        rules[rotate_270(flip_h(src))] = dst
 
     image = [list(".#."), list("..#"), list("###")]
     glued_img = glue(image)
     for src in [
         glued_img,
-        rotate(glued_img),
-        rotate(glued_img, 2),
-        rotate(glued_img, 3),
+        rotate_90(glued_img),
+        rotate_180(glued_img),
+        rotate_270(glued_img),
         flip_v(glued_img),
         flip_h(glued_img),
     ]:
         if src in rules:
             dst = rules[src]
-            rules[rotate(src, 1)] = dst
-            rules[rotate(src, 2)] = dst
-            rules[rotate(src, 3)] = dst
+            rules[rotate_90(src)] = dst
+            rules[rotate_180(src)] = dst
+            rules[rotate_270(src)] = dst
             rules[flip_v(src)] = dst
             rules[flip_h(src)] = dst
             break
 
-    iterations = 18
+    iterations = 5
     print_img(image)
     for _ in range(iterations):
         size = len(image)
