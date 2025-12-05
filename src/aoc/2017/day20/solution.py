@@ -61,14 +61,15 @@ def part2(particles):
         cy = y_beta - y_alpha
         cz = z_beta - z_alpha
 
-        # test for x direction
-        t_coll = None
+        # find integer collision time in the future for x axis
         if ax == 0:
             if bx == 0 or cx % bx != 0:
                 continue
             t_coll = -cx // bx
         else:
-            D = (ax + 2 * bx) ** 2 - 8 * ax * cx
+            A = 2 * ax
+            B = (ax + 2 * bx)
+            D = B ** 2 - 4 * A * cx
             if D < 0:
                 continue
             s = floor(sqrt(D))
@@ -76,22 +77,26 @@ def part2(particles):
                 continue
 
             t_1, t_2 = -inf, -inf
-            if (-ax - 2 * bx - s) % (2 * ax) == 0:
-                t_1 = (-ax - 2 * bx - s) // (2 * ax)
-            if (-ax - 2 * bx + s) % (2 * ax) == 0:
-                t_2 = (-ax - 2 * bx + s) // (2 * ax)
+            if (-B - s) % A == 0:
+                t_1 = (-B - s) // A
+            if (-B + s) % A == 0:
+                t_2 = (-B + s) // A
 
             t_min = min(t_1, t_2)
             t_max = max(t_1, t_2)
-
-            if t_min >= 0:
+            # both collisions in the future
+            if t_min >= 0:  
                 t_coll = t_min
-            elif t_max >= 0:
+            # one collision in the past and one in the future
+            elif t_max >= 0:  
                 t_coll = t_max
-            else:
+            # both collisions in the past
+            else:  
                 continue
 
-        if evolve(t_coll, ay, by, cy) == 0 and evolve(t_coll, az, bz, cz) == 0:
+        y_delta_t_coll = evolve(t_coll, ay, by, cy)
+        z_delta_t_coll = evolve(t_coll, az, bz, cz)
+        if y_delta_t_coll == 0 and z_delta_t_coll == 0:
             collisions[t_coll] |= {id_alpha, id_beta}
 
     particle_ids = set(range(len(particles)))
