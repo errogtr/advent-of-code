@@ -22,10 +22,8 @@ def part2(intervals):
             continue
         
         prev_l, prev_r = merged_intervals[-1]
-        if l <= prev_r < r:
-            merged_intervals[-1] = (prev_l, r)
-        elif r <= prev_r:
-            continue
+        if l <= prev_r:
+            merged_intervals[-1] = (prev_l, max(r, prev_r))
         else:
             merged_intervals.append((l, r))
 
