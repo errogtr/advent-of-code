@@ -31,7 +31,7 @@ def part1(instructions):
 @timer
 def part2():
     """
-    My input + th instructions consist in a program equivalent to the following:
+    My input + the instructions consist in a program equivalent to the following:
 
     ###################################
     1.  b = 108400
