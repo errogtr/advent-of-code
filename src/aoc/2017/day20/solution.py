@@ -1,6 +1,6 @@
 from collections import defaultdict
 from itertools import combinations
-from math import floor, inf, sqrt
+from math import floor, sqrt
 import re
 
 import click
@@ -27,6 +27,37 @@ def evolve(t, a, b, c):
     return (t * (t + 1)) // 2 * a + t * b + c
 
 
+def solve(a, b, c):
+    """
+    Solves (t * (t + 1)) // 2 * a + t * b + c = 0 for integer positive t
+    """
+    if a == 0:
+        if b == 0 or c % b != 0:
+            return None
+        return -c // b
+    else:
+        A = 2 * a
+        B = a + 2 * b
+        D = B**2 - 4 * A * c
+        if D < 0:
+            return None
+        s = floor(sqrt(D))
+        if s * s != D:
+            return None
+
+        # looking for min positive t-solution
+        t_candidates = list()
+        if (-B - s) % A == 0:
+            t_candidates.append((-B - s) // A)
+        if (-B + s) % A == 0:
+            t_candidates.append((-B + s) // A)
+        t_positive = [t for t in t_candidates if t >= 0]
+        if t_positive:
+            return min(t_positive)
+
+    return None
+
+
 @timer
 def part1(particles):
     magnitudes = [(manhattan(a), manhattan(v), manhattan(p)) for p, v, a in particles]
@@ -37,73 +68,51 @@ def part1(particles):
 @timer
 def part2(particles):
     collisions = defaultdict(set)
-    for (id_alpha, alpha), (id_beta, beta) in combinations(enumerate(particles), 2):
-        p_alpha, v_alpha, a_alpha = alpha
-        p_beta, v_beta, a_beta = beta
+    for (id_1, ptcl_1), (id_2, ptcl_2) in combinations(enumerate(particles), 2):
+        p_1, v_1, a_1 = ptcl_1
+        p_2, v_2, a_2 = ptcl_2
 
-        x_alpha, y_alpha, z_alpha = p_alpha
-        vx_alpha, vy_alpha, vz_alpha = v_alpha
-        ax_alpha, ay_alpha, az_alpha = a_alpha
+        x_1, y_1, z_1 = p_1
+        vx_1, vy_1, vz_1 = v_1
+        ax_1, ay_1, az_1 = a_1
 
-        x_beta, y_beta, z_beta = p_beta
-        vx_beta, vy_beta, vz_beta = v_beta
-        ax_beta, ay_beta, az_beta = a_beta
+        x_2, y_2, z_2 = p_2
+        vx_2, vy_2, vz_2 = v_2
+        ax_2, ay_2, az_2 = a_2
 
-        ax = ax_beta - ax_alpha
-        ay = ay_beta - ay_alpha
-        az = az_beta - az_alpha
+        ax_delta = ax_2 - ax_1
+        ay_delta = ay_2 - ay_1
+        az_delta = az_2 - az_1
 
-        bx = vx_beta - vx_alpha
-        by = vy_beta - vy_alpha
-        bz = vz_beta - vz_alpha
+        vx_delta = vx_2 - vx_1
+        vy_delta = vy_2 - vy_1
+        vz_delta = vz_2 - vz_1
 
-        cx = x_beta - x_alpha
-        cy = y_beta - y_alpha
-        cz = z_beta - z_alpha
+        px_delta = x_2 - x_1
+        py_delta = y_2 - y_1
+        pz_delta = z_2 - z_1
 
         # find integer collision time in the future for x axis
-        if ax == 0:
-            if bx == 0 or cx % bx != 0:
-                continue
-            t_coll = -cx // bx
-        else:
-            A = 2 * ax
-            B = (ax + 2 * bx)
-            D = B ** 2 - 4 * A * cx
-            if D < 0:
-                continue
-            s = floor(sqrt(D))
-            if s * s != D:
-                continue
+        # if the same t_coll solves the quadratic equation
+        #
+        #   (t * (t + 1)) // 2 * a + t * b + c = 0
+        #
+        #          |- a = a*2 - a*1
+        #   where: |- b = v*2 - v*1
+        #          |- c = p*2 - p*1
+        #
+        #  then p*1(t_coll) = p*2(coll_)
+        #
+        if (t_coll := solve(ax_delta, vx_delta, px_delta)) is not None:
+            y_delta_t_coll = evolve(t_coll, ay_delta, vy_delta, py_delta)
+            z_delta_t_coll = evolve(t_coll, az_delta, vz_delta, pz_delta)
+            if y_delta_t_coll == 0 and z_delta_t_coll == 0:
+                collisions[t_coll] |= {id_1, id_2}
 
-            t_1, t_2 = -inf, -inf
-            if (-B - s) % A == 0:
-                t_1 = (-B - s) // A
-            if (-B + s) % A == 0:
-                t_2 = (-B + s) // A
-
-            t_min = min(t_1, t_2)
-            t_max = max(t_1, t_2)
-            # both collisions in the future
-            if t_min >= 0:  
-                t_coll = t_min
-            # one collision in the past and one in the future
-            elif t_max >= 0:  
-                t_coll = t_max
-            # both collisions in the past
-            else:  
-                continue
-
-        y_delta_t_coll = evolve(t_coll, ay, by, cy)
-        z_delta_t_coll = evolve(t_coll, az, bz, cz)
-        if y_delta_t_coll == 0 and z_delta_t_coll == 0:
-            collisions[t_coll] |= {id_alpha, id_beta}
-
+    # remove particle ids with respect to time ordering of collisions
     particle_ids = set(range(len(particles)))
     for t in sorted(collisions):
-        for id in collisions[t]:
-            if id in particle_ids:
-                particle_ids.remove(id)
+        particle_ids -= collisions[t]
 
     return len(particle_ids)
 
