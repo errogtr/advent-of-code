@@ -69,7 +69,7 @@ def part2():
 
         {108400 + 17 * k, k integer in [0, 17000]} & {x | x is NOT prime}
 
-    Here I list the 98 prime numbers inside the range [108400, 125400]:
+    Here I list the 98 elements in the first set which are also prime numbers:
 
             108553, 108587, 108791, 108893, 108961, 109063, 109097,
             109199, 109267, 109471, 109913, 110083, 110321, 110491,
@@ -86,7 +86,7 @@ def part2():
             123547, 123581, 123853, 123887, 123989, 124193, 124363,
             124567, 124601, 124669, 124703, 124771, 124907, 125383
 
-    Since in the interval [108400, 125400] contains 1001 = (108400 - 125400) // 17 + 1 numbers,
+    Since in the first set contains 1001 = (108400 - 125400) // 17 + 1 numbers,
     the answer is 903 = 1001 - 98
     """
     return 903
