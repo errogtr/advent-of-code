@@ -21,16 +21,18 @@ def part1(data):
 def part2(data):
     *num_rows, ops_row = data.splitlines()
     nums_right_to_left = [r[::-1] for r in num_rows]
+    l_rows = len(num_rows)
 
     num_blocks = list()
     current_block = list()
     for col in zip(*nums_right_to_left):
-        digits = "".join(col).replace(" ", "")
-        if digits:
-            current_block.append(int(digits))
-        else:
+        digits = "".join(col)
+        if digits.count(" ") == l_rows:
             num_blocks.append(current_block)
             current_block = list()
+        else:
+            current_block.append(int(digits))
+
     num_blocks.append(current_block)
 
     ops_right_to_left = [OPS[op] for op in ops_row.split()[::-1]]
