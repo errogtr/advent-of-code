@@ -25,16 +25,15 @@ def part2(connections):
         next_ports = connections[free_pin] - visited
 
         if not next_ports:
-            return length, p1 + p2 
-        
+            return length, p1 + p2
+
         max_len_str = (0, 0)
         for p in next_ports:
             sub_len, sub_str = bridge(*p, free_pin, length + 1, visited | {p})
             max_len_str = max(max_len_str, (sub_len, p1 + p2 + sub_str))
         return max_len_str
 
-
-    max_len, best_str = max(bridge(*port, 0, 1, {port}) for port in connections[0])  
+    max_len, best_str = max(bridge(*port, 0, 1, {port}) for port in connections[0])
     return best_str
 
 
