@@ -22,7 +22,28 @@ def part1(connections):
 
 @timer
 def part2(connections):
-    return
+    def bridge(port, used_pin, length, visited):
+        pin_1, pin_2 = port
+        strength = pin_1 + pin_2
+        free_pin = pin_1 if used_pin == pin_2 else pin_2
+        next_ports = connections[free_pin] - visited
+
+        if not next_ports:
+            return length, strength
+        
+        len_strength = list()
+        for p in next_ports:
+            bridge_length, bridge_strength = bridge(p, free_pin, length + 1, visited | {p})
+            len_strength.append((bridge_length, strength + bridge_strength))
+
+        max_length, max_strength = sorted(len_strength, reverse=True)[0]
+
+        return max_length, max_strength
+
+    len_strengths = [bridge(port, 0, 1, {port}) for port in connections[0]]
+    _, max_strength = sorted(len_strengths, reverse=True)[0]
+        
+    return max_strength
 
 
 @click.command()
