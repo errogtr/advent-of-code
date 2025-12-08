@@ -34,7 +34,7 @@ def main(example):
     data = read_data(__file__, example)
 
     first_row, *rows = data.splitlines()
-    start = next(x for x, c in enumerate(first_row) if c == "S")
+    start = first_row.index("S")
     splitters = [{x for x, c in enumerate(row) if c == "^"} for row in rows]
 
     # ==== PART 1 ====
