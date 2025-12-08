@@ -6,44 +6,36 @@ from aoc.utils import read_data, timer
 
 @timer
 def part1(connections):
-    def bridge(port, used_pin, visited):
-        pin_1, pin_2 = port
-        strength = pin_1 + pin_2
-        free_pin = pin_1 if used_pin == pin_2 else pin_2
+    def bridge(p1, p2, used_pin, visited):
+        free_pin = p1 if used_pin == p2 else p2
         next_ports = connections[free_pin] - visited
 
         if not next_ports:
-            return strength
+            return p1 + p2
 
-        return strength + max(bridge(p, free_pin, visited | {p}) for p in next_ports)
+        return p1 + p2 + max(bridge(*p, free_pin, visited | {p}) for p in next_ports)
 
-    return max(bridge(port, 0, {port}) for port in connections[0])
+    return max(bridge(*port, 0, {port}) for port in connections[0])
 
 
 @timer
 def part2(connections):
-    def bridge(port, used_pin, length, visited):
-        pin_1, pin_2 = port
-        strength = pin_1 + pin_2
-        free_pin = pin_1 if used_pin == pin_2 else pin_2
+    def bridge(p1, p2, used_pin, length, visited):
+        free_pin = p1 if used_pin == p2 else p2
         next_ports = connections[free_pin] - visited
 
         if not next_ports:
-            return length, strength
+            return length, p1 + p2 
         
-        len_strength = list()
+        max_len_str = (0, 0)
         for p in next_ports:
-            bridge_length, bridge_strength = bridge(p, free_pin, length + 1, visited | {p})
-            len_strength.append((bridge_length, strength + bridge_strength))
+            sub_len, sub_str = bridge(*p, free_pin, length + 1, visited | {p})
+            max_len_str = max(max_len_str, (sub_len, p1 + p2 + sub_str))
+        return max_len_str
 
-        max_length, max_strength = sorted(len_strength, reverse=True)[0]
 
-        return max_length, max_strength
-
-    len_strengths = [bridge(port, 0, 1, {port}) for port in connections[0]]
-    _, max_strength = sorted(len_strengths, reverse=True)[0]
-        
-    return max_strength
+    max_len, best_str = max(bridge(*port, 0, 1, {port}) for port in connections[0])  
+    return best_str
 
 
 @click.command()
