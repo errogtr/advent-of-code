@@ -9,21 +9,20 @@ def part1(connections):
     def bridge(port, used_pin, visited):
         pin_1, pin_2 = port
         strength = pin_1 + pin_2
-
         free_pin = pin_1 if used_pin == pin_2 else pin_2
         next_ports = connections[free_pin] - visited
 
         if not next_ports:
             return strength
 
-        return max(strength + bridge(p, free_pin, visited | {p}) for p in next_ports)
+        return strength + max(bridge(p, free_pin, visited | {p}) for p in next_ports)
 
     return max(bridge(port, 0, {port}) for port in connections[0])
 
 
 @timer
-def part2():
-    pass
+def part2(connections):
+    return
 
 
 @click.command()
