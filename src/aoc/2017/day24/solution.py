@@ -4,39 +4,21 @@ import click
 from aoc.utils import read_data, timer
 
 
-def bridge(port, target_ports, occupied, visited):
-    pins = port.split("/")
-    strength = sum(map(int, pins))
-    next_ports = list()
-    for target_port in target_ports:
-        if target_port in visited:
-            continue
-        pin_1, pin_2 = target_port.split("/")
-        if pin_1 in pins:
-            next_ports.append(target_port)
-        elif pin_2 in pins:
-            next_ports.append(target_port)
-
-    if not target_ports:
-        return strength
-
-
 @timer
-def part1(data):
-    ports = sorted(data.splitlines())
+def part1(connections):
+    def bridge(port, used_pin, visited):
+        pin_1, pin_2 = port
+        strength = pin_1 + pin_2
 
-    zero_pin_ports = list()
-    target_ports = list()
-    for port in ports:
-        if port.startswith("0"):
-            zero_pin_ports.append(port)
-        else:
-            target_ports.append(port)
-
-    brigdes = defaultdict(dict)
-    for init_port in zero_pin_ports:
-        strength = bridge(init_port, target_ports, "0", {init_port})
-
+        free_pin = pin_1 if used_pin == pin_2 else pin_2
+        next_ports = connections[free_pin] - visited
+        
+        if not next_ports:
+            return strength
+        
+        return max(strength + bridge(p, free_pin, visited | {p}) for p in next_ports)
+    
+    return max(bridge(port, 0, {port}) for port in connections[0])
 
 
 @timer
@@ -49,11 +31,18 @@ def part2():
 def main(example):
     data = read_data(__file__, example)
 
+    connections = defaultdict(set)
+    for port in data.splitlines():
+        pin_1, pin_2 = map(int, port.split("/"))
+        connections[pin_1].add((pin_1, pin_2))
+        connections[pin_2].add((pin_1, pin_2))
+
+
     # ==== PART 1 ====
-    print(part1(data))
+    print(part1(connections))
 
     # ==== PART 2 ====
-    print(part2())
+    print(part2(connections))
 
 
 if __name__ == "__main__":
