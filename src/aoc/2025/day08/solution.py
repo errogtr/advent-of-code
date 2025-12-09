@@ -14,7 +14,7 @@ def part1(boxes, distances):
     circuits = list()
     for count in range(1000):
         _, i, j = distances[count]
-        
+
         circuit_i, circuit_j = None, None
         for k, circuit in enumerate(circuits):
             if i in circuit:
@@ -34,7 +34,7 @@ def part1(boxes, distances):
                 circuits.pop(circuit_j)
 
         if len(circuits) == 1 and len(circuits[0]) == len(boxes):
-            x_i, *_ = boxes[i] 
+            x_i, *_ = boxes[i]
             x_j, *_ = boxes[j]
             print(x_i * x_j)
             break
@@ -47,7 +47,7 @@ def part2(boxes, distances):
     circuits = list()
     for count in range(len(distances)):
         _, i, j = distances[count]
-        
+
         circuit_i, circuit_j = None, None
         for k, circuit in enumerate(circuits):
             if i in circuit:
@@ -67,7 +67,7 @@ def part2(boxes, distances):
                 circuits.pop(circuit_j)
 
         if len(circuits) == 1 and len(circuits[0]) == len(boxes):
-            x_i, *_ = boxes[i] 
+            x_i, *_ = boxes[i]
             x_j, *_ = boxes[j]
             return x_i * x_j
 
@@ -83,7 +83,7 @@ def main(example):
         d = dist(box_i, box_j)
         distances.append((d, i, j))
     sorted_distances = sorted(distances)
-    
+
     # ==== PART 1 ====
     print(part1(boxes, sorted_distances))
 
