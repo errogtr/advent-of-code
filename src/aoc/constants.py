@@ -10,12 +10,12 @@ from aoc.utils import read_data, timer
 
 
 @timer
-def part1(*args, **kwargs):
+def part1():
     pass
 
 
 @timer
-def part2(*args, **kwargs):
+def part2():
     pass
 
 
@@ -25,10 +25,10 @@ def main(example: bool):
     data = read_data(__file__, example)
 
     # ==== PART 1 ====
-    print(part1(...))
+    print(part1())
 
     # ==== PART 2 ====
-    print(part2(...))
+    print(part2())
 
 
 if __name__ == "__main__":
