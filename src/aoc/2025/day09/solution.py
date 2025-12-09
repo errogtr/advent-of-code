@@ -37,7 +37,7 @@ def part2(coords):
         else:
             v_y = 1 if d > b else -1
             for t in range(y, w + 1):
-                perimeter[t].append((x, v_y))
+                perimeter[t].append((x, z, v_y))
         min_x = min(x, min_x)
     perimeter = {y: sorted(intervals) for y, intervals in perimeter.items()}
 
@@ -53,20 +53,20 @@ def part2(coords):
             intervals = perimeter[y]
             outside = False
             if y == q or y == s:
-                for x in range(p, r + 1):
-                    intersections = 0
-                    for m, turn in intervals:
-                        if x < m:
-                            break
-                        intersections += turn
-                    if intersections == 0:
-                        outside = True
+                intersections = 0
+                for left, right, turns in intervals:
+                    if right < p:
+                        continue
+                    if left > r:
                         break
+                    intersections += turns
+                if intersections == 0:
+                    outside = True
             else:
                 for x in [p, r]:
                     intersections = 0
-                    for m, turn in intervals:
-                        if x < m:
+                    for left, right, turn in intervals:
+                        if x < left:
                             break
                         intersections += turn
                     if intersections == 0:
