@@ -24,21 +24,11 @@ def part1(coords):
 @timer
 def part2(coords):
     perimeter = defaultdict(list)
-    min_x = 0
     for (a, b), (c, d) in pairwise(coords + coords[:1]):
-        x = min(a, c)
-        y = min(b, d)
-        z = max(a, c)
-        w = max(b, d)
-        if y == w:
-            # turn = 1 if f > w else -1
-            # perimeter[y].append((x, z, turn))
-            pass
-        else:
+        if a == c:
             v_y = 1 if d > b else -1
-            for t in range(y, w + 1):
-                perimeter[t].append((x, z, v_y))
-        min_x = min(x, min_x)
+            for t in range(min(b, d), max(b, d) + 1):
+                perimeter[t].append((a, v_y))
     perimeter = {y: sorted(intervals) for y, intervals in perimeter.items()}
 
     max_area = 0
@@ -54,9 +44,7 @@ def part2(coords):
             outside = False
             if y == q or y == s:
                 intersections = 0
-                for left, right, turns in intervals:
-                    if right < p:
-                        continue
+                for left, turns in intervals:
                     if left > r:
                         break
                     intersections += turns
@@ -65,7 +53,7 @@ def part2(coords):
             else:
                 for x in [p, r]:
                     intersections = 0
-                    for left, right, turn in intervals:
+                    for left, turn in intervals:
                         if x < left:
                             break
                         intersections += turn
