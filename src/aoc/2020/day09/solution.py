@@ -26,4 +26,3 @@ def main(example: bool):
 
 if __name__ == "__main__":
     main()
-
