@@ -7,13 +7,14 @@ from tqdm import tqdm
 from aoc.utils import read_data, timer
 
 
-def area(p, q, r, s):
+def area(rect):
+    p, q, r, s = rect
     return (r - p + 1) * (s - q + 1)
 
 
 @timer
 def part1(rectangles):
-    return max(area(p, q, r, s) for p, q, r, s in rectangles)
+    return max(area(rect) for rect in rectangles)
 
 
 @timer
@@ -27,7 +28,26 @@ def part2(coords, rectangles):
     perimeter = {y: sorted(intervals) for y, intervals in perimeter.items()}
 
     max_area = 0
-    for p, q, r, s in tqdm(rectangles):
+    for rect in sorted(rectangles, key=area, reverse=True):        
+        p, q, r, s = rect
+        corners = ((p, q), (r, q), (r, s), (p, s))
+        outside = False
+        for x, y in corners:
+            winding = 0
+            for pt, orientation in perimeter[y]:
+                if x < pt:
+                    break
+                winding += orientation
+            if winding == 0:
+                outside = True
+                break
+        if outside:
+            continue
+
+        curr_area = area(rect)
+        if curr_area < max_area:
+            continue
+
         for y in range(q, s + 1):
             intervals = perimeter[y]
             outside = False
@@ -52,7 +72,7 @@ def part2(coords, rectangles):
             if outside:
                 break
         else:
-            max_area = max(max_area, area(p, q, r, s))
+            max_area = max(max_area, curr_area)
 
     return max_area
 
@@ -71,11 +91,21 @@ def main(example):
         s = max(b, d)
         rectangles.append((p, q, r, s))
 
+    partially_ordered_coords = dict()
+    for p, q, r, s in rectangles:
+        if (p, q) not in partially_ordered_coords:
+            partially_ordered_coords[(p, q)] = (r, s)
+        else:
+            r_compare, s_compare = partially_ordered_coords[(p, q)]
+            if r_compare < r and s_compare < s:
+                partially_ordered_coords[(p, q)] = (r, s)
+    maximal_rectangles = [(p, q, r, s) for (p, q), (r, s) in partially_ordered_coords.items()]
+
     # ==== PART 1 ====
     print(part1(rectangles))
 
     # ==== PART 2 ====
-    print(part2(coords, rectangles))
+    print(part2(coords, maximal_rectangles))
 
 
 if __name__ == "__main__":
