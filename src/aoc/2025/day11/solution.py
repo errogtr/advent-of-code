@@ -24,12 +24,12 @@ def part2(devices):
         
         count = 0
         for device in devices[curr]:
-            fft = (device == "fft" or (device != "fft" and fft))
-            dac = (device == "dac" or (device != "dac" and dac))
+            fft = (device == "fft" or fft)
+            dac = (device == "dac" or dac)
             count += explore(device, fft, dac)
         return count
 
-    return explore("svr", fft=False, dac=False)
+    return explore("svr", False, False)
 
 
 @click.command()
