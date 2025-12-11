@@ -7,22 +7,17 @@ from tqdm import tqdm
 from aoc.utils import read_data, timer
 
 
-def area(a, b, c, d):
-    """One corner is (a, b), the other is (c, d)"""
-    return (abs(a - c) + 1) * (abs(b - d) + 1)
-
-
-def triplewise(seq):
-    return zip(seq, seq[1:], seq[2:])
+def area(p, q, r, s):
+    return (r - p + 1) * (s - q + 1)
 
 
 @timer
-def part1(coords):
-    return max(area(a, b, c, d) for (a, b), (c, d) in combinations(coords, 2))
+def part1(rectangles):
+    return max(area(p, q, r, s) for p, q, r, s in rectangles)
 
 
 @timer
-def part2(coords):
+def part2(coords, rectangles):
     perimeter = defaultdict(list)
     for (a, b), (c, d) in pairwise(coords + coords[:1]):
         if a == c:
@@ -32,13 +27,7 @@ def part2(coords):
     perimeter = {y: sorted(intervals) for y, intervals in perimeter.items()}
 
     max_area = 0
-    comb = len(coords) * (len(coords) - 1) // 2
-    for (a, b), (c, d) in tqdm(combinations(coords, 2), total=comb):
-        p = min(a, c)
-        q = min(b, d)
-        r = max(a, c)
-        s = max(b, d)
-
+    for p, q, r, s in tqdm(rectangles):
         for y in range(q, s + 1):
             intervals = perimeter[y]
             outside = False
@@ -62,9 +51,8 @@ def part2(coords):
                         break
             if outside:
                 break
-
-        if not outside:
-            max_area = max(max_area, area(a, b, c, d))
+        else:
+            max_area = max(max_area, area(p, q, r, s))
 
     return max_area
 
@@ -75,12 +63,19 @@ def main(example):
     data = read_data(__file__, example)
 
     coords = [[int(x) for x in line.split(",")] for line in data.splitlines()]
+    rectangles = list()
+    for (a, b), (c, d) in combinations(coords, 2):
+        p = min(a, c)
+        q = min(b, d)
+        r = max(a, c)
+        s = max(b, d)
+        rectangles.append((p, q, r, s))
 
     # ==== PART 1 ====
-    print(part1(coords))
+    print(part1(rectangles))
 
     # ==== PART 2 ====
-    print(part2(coords))
+    print(part2(coords, rectangles))
 
 
 if __name__ == "__main__":
