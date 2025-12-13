@@ -9,9 +9,9 @@ def part1(devices):
     def explore(curr):
         if curr == "out":
             return 1
-        
+
         return sum(explore(device) for device in devices[curr])
-    
+
     return explore("you")
 
 
@@ -21,11 +21,11 @@ def part2(devices):
     def explore(curr, fft, dac):
         if curr == "out":
             return fft and dac
-        
+
         count = 0
         for device in devices[curr]:
-            fft = (device == "fft" or fft)
-            dac = (device == "dac" or dac)
+            fft = device == "fft" or fft
+            dac = device == "dac" or dac
             count += explore(device, fft, dac)
         return count
 

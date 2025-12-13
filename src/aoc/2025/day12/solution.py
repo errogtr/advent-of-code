@@ -4,8 +4,8 @@ import click
 from aoc.utils import read_data, timer
 
 
-# The area of every shape summed up should not be too high compared 
-# to the available space. I have no idea why COEFF=1.0 works, but below 
+# The area of every shape summed up should not be too high compared
+# to the available space. I have no idea why COEFF=1.0 works, but below
 # this value I got wrong solutions...
 COEFF = 1.0
 
@@ -15,16 +15,16 @@ def part1(data):
     *presents_list, region_specs = data.split("\n\n")
 
     shapes = [present.count("#") for present in presents_list]
-    
+
     fit = 0
     for specs in region_specs.splitlines():
         shape, counter = specs.split(": ")
         area = prod(map(int, shape.split("x")))
         counts = [int(x) for x in counter.split()]
         fit += area >= COEFF * sum(shapes[i] * c for i, c in enumerate(counts))
-    
+
     return fit
-        
+
 
 @timer
 def part2():
