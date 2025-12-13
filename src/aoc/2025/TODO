@@ -1,0 +1,19 @@
+DAY 8
+- Write better solution with Union Find
+
+DAY 9
+- I got the correct answer, but I did not realize that my solution works only because the 
+  input data draw a particular shape, which I did't visualized myself.
+- Rewrote with brute-force ray-tracing, took 3h to get to the correct answer.
+- Try to implement compressed ray-tracing
+
+DAY 10
+- Maybe try to implement ILP solver myself...? (Yeah, sure)
+- I found a very interesting analytic approach in AoC subreddit (https://shorturl.at/LT2FJ),
+  it would be lovely to give it a try.
+
+DAY 12
+- A friend of mine fed Claude with puzzle + input. Claude wrote a solution involving
+  Knuth's dancing links algorithm (https://shorturl.at/08gH6), which gives the correct
+  answer both for the example and for the input. I think it would be  interesting to 
+  understand how that works. 
