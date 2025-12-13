@@ -6,6 +6,7 @@ from aoc.utils import read_data, timer
 
 @timer
 def part1(devices):
+    @cache
     def explore(curr):
         if curr == "out":
             return 1
