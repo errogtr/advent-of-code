@@ -15,16 +15,15 @@ def nn(x, y):
     ]
 
 
-
 def visible(x, y, seats):
     def _scan_row(row):
         for el in row:
             if el != ".":
                 yield el
 
-    visible_seat = next(_scan_row(seats[y][x+1:]), ".")
+    visible_seat = next(_scan_row(seats[y][x + 1 :]), ".")
     return visible_seat
-    
+
 
 def rotate(seats):
     return list(zip(*seats[::-1]))
@@ -48,7 +47,7 @@ def single_round_vis(state):
         for x, seat in enumerate(row):
             if seat == ".":
                 continue
-            visible_seats = list()  
+            visible_seats = list()
             visible_seats_right = visible(x, y, state)
             visible_seats_left = visible(x, y, rotate(rotate(state)))
             visible_seats_up = visible(x, y, rotate(rotate(rotate(state))))
@@ -93,9 +92,7 @@ def main(example: bool):
     data = read_data(__file__, example)
 
     seats = {
-        (x, y): v
-        for y, row in enumerate(data.splitlines())
-        for x, v in enumerate(row)
+        (x, y): v for y, row in enumerate(data.splitlines()) for x, v in enumerate(row)
     }
 
     # ==== PART 1 ====
