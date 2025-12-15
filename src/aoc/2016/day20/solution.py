@@ -9,7 +9,7 @@ for a, b in sorted(blacklist):
         blocked.append((a, b))
     else:
         c, d = blocked[-1]
-        if a <= d+1 <= b:
+        if a <= d + 1 <= b:
             blocked[-1] = (c, b)
         elif d < a:
             blocked.append((a, b))

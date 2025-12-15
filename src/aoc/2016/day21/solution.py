@@ -11,7 +11,7 @@ def scramble(password, instructions):
                 password.insert(y, password.pop(x))
             case "reverse":
                 x, y = map(int, re.findall(r"(\d+)", specs))
-                password = password[:x] + password[x:y + 1][::-1] + password[y + 1:]
+                password = password[:x] + password[x : y + 1][::-1] + password[y + 1 :]
             case "rotate":
                 if specs.startswith("based"):
                     idx = password.index(specs[-1])

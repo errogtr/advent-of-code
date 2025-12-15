@@ -11,7 +11,7 @@ print(sum(is_possible(*sorted(t)) for t in triangles))
 # ==== PART 2 ====
 print(
     sum(
-        sum(is_possible(*sorted(t)) for t in zip(*triangles[i:i + 3]))
+        sum(is_possible(*sorted(t)) for t in zip(*triangles[i : i + 3]))
         for i in range(0, len(triangles), 3)
     )
 )

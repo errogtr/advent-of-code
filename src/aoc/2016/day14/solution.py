@@ -5,7 +5,7 @@ from functools import cache
 
 @cache
 def stretch(s, n):
-    for _ in range(n+1):
+    for _ in range(n + 1):
         s = md5(s.encode()).hexdigest()
     return s
 
