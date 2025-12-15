@@ -8,8 +8,10 @@ from aoc.utils import read_data, timer
 
 def parse(line: str) -> tuple[int, int]:
     positions_match = re.search(r"(\d+) positions.+position (\d+)", line)
-    period, start = map(int, positions_match.groups())
-    return period, start
+    if positions_match is not None:
+        period, start = map(int, positions_match.groups())
+        return period, start
+    raise RuntimeError("Input parsing failed.")
 
 
 def min_alignment_time(discs):
