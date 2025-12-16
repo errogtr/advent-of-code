@@ -4,10 +4,10 @@ from aoc.utils import read_data, timer
 
 def safe_tiles(row_str: str, n_rows: int) -> int:
     """Count safe tiles using Rule 90 cellular automaton.
-    
-    Rule 90 (https://tinyurl.com/4herwm62) generates each row by taking the XOR 
-    between characters in even and odd positions. Using integers, this is 
-    equivalent to XORing a left-shifted integer (with MSB masked off) with the 
+
+    Rule 90 (https://tinyurl.com/4herwm62) generates each row by taking the XOR
+    between characters in even and odd positions. Using integers, this is
+    equivalent to XORing a left-shifted integer (with MSB masked off) with the
     same integer right-shifted.
     """
     size = len(row_str)
