@@ -105,7 +105,7 @@ def part2(marked_pts_graph: dict[str, MarkedPtLinks]) -> int:
 
     if min_dist is None:
         raise RuntimeError("No solution found.")
-    
+
     return min_dist
 
 
