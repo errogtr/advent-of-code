@@ -31,7 +31,7 @@ def part1(data):
 @timer
 def part2(data):
     schedule = parse_logs(data)
-    
+
     mult = None
     sleep_count = 0
     for guard, minute_count in schedule.items():
@@ -57,4 +57,3 @@ def main(example: bool):
 
 if __name__ == "__main__":
     main()
-
