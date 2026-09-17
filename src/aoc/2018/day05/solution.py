@@ -32,6 +32,7 @@ def part1(polymer):
 @timer
 def part2(polymer):
     shortest = len(polymer)
+    polymer = react(polymer)
     for unit in string.ascii_lowercase:
         modified = polymer.replace(unit, "").replace(unit.upper(), "")
         shortest = min(shortest, len(react(modified)))
