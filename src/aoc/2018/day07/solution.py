@@ -7,19 +7,9 @@ import click
 from aoc.utils import read_data, timer
 
 
-instr_pattern = re.compile(
+INSTR_PATTERN = re.compile(
     r"Step ([A-Z]) must be finished before step ([A-Z]) can begin."
 )
-
-
-def build_graph(data, delay, with_time):
-    graph = defaultdict(list)
-    executed = defaultdict(dict)
-    for instruction in data.splitlines():
-        step, next_step = instr_pattern.search(instruction).groups()
-        graph[step].append(next_step)
-        executed[next_step][step] = delay + with_time * (ord(step) - 64)
-    return graph, executed
 
 
 def traverse(node, graph, executed):
@@ -35,52 +25,64 @@ def traverse(node, graph, executed):
     return order
 
 
+def parse_dependencies(data):
+    dependencies = defaultdict(set)
+    steps = set()
+    for line in data.splitlines():
+        prereq, step = INSTR_PATTERN.search(line).groups()
+        dependencies[step].add(prereq)
+        steps.update((prereq, step))
+
+    # Steps with no prerequisites still need an entry.
+    for step in steps:
+        dependencies.setdefault(step, set())
+    return dependencies
+
+
+def step_duration(step, base_delay):
+    return base_delay + (ord(step) - ord("A") + 1)
+
+
 @timer
 def part1(data):
-    graph, executed = build_graph(data, delay=1, with_time=False)
+    remaining = parse_dependencies(data)
+    order = []
 
-    order = ""
-    for node in sorted(list(set(graph) - set(executed))):
-        order += traverse(node, graph, executed)
-    return order
+    while remaining:
+        ready = sorted(step for step, deps in remaining.items() if deps <= set(order))
+        next_step = ready[0]
+        order.append(next_step)
+        del remaining[next_step]
+
+    return "".join(order)
 
 
 @timer
-def part2(data):
-    graph, executed = build_graph(data, delay=60, with_time=True)
-    counter = {c: 60 + ord(c) - 64 for c in ascii_uppercase}
+def part2(data, num_workers, base_delay):
+    remaining = parse_dependencies(data)
+    done = set()
+    in_progress = {}
+    free_workers = num_workers
 
-    workers = [None, None, None, None,]
-    queue = sorted(list(set(graph) - set(executed)))
     t = 0
-    while True:
-        for i, worker in enumerate(workers):
-            if queue and worker is None:
-                workers[i] = queue.pop(0)
+    while remaining or in_progress:
+        ready = sorted(step for step, deps in remaining.items() if deps <= done)
+        for step in ready:
+            if free_workers == 0:
+                break
+            in_progress[step] = step_duration(step, base_delay)
+            del remaining[step]
+            free_workers -= 1
 
-        if all(w is None for w in workers):
-            break
-
-        for i, worker in enumerate(workers):
-            if worker is None:
-                continue
-
-            counter[worker] = max(counter[worker] - 1, 0)
-            if counter[worker] == 0:
-                workers[i] = None
-
-            buffer = []
-            for node in sorted(graph[worker]):
-                if all(counter[prev] == 0 for prev in executed[node]):
-                    buffer.append(node)
-                    
-            queue = buffer + queue
+        for step in list(in_progress):
+            in_progress[step] -= 1
+            if in_progress[step] == 0:
+                done.add(step)
+                del in_progress[step]
+                free_workers += 1
 
         t += 1
-        
-        
     return t
-
 
 
 @click.command()
@@ -92,7 +94,7 @@ def main(example: bool):
     print(part1(data))
 
     # ==== PART 2 ====
-    print(part2(data))
+    print(part2(data, num_workers=2 if example else 5, base_delay=0 if example else 60))
 
 
 if __name__ == "__main__":
