@@ -8,6 +8,7 @@ INPUT_PATTERN = re.compile(r"(\d+) players; last marble is worth (\d+) points")
 
 
 def game(players, marbles):
+    # Using 'list.insert' is inefficient here 
     scores = [0] * players
     circle = deque([0])
     for t in range(1, marbles + 1):
