@@ -1,6 +1,5 @@
 from collections import defaultdict
 import re
-from string import ascii_uppercase
 
 import click
 
