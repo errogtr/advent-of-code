@@ -23,7 +23,7 @@ def evolve(data, print_t=False):
         pos_t = list()
         for (x, y), (vx, vy) in zip(pos, vel):
             pos_t.append((x + vx, y + vy))
-        
+
         var_y_t = variance(y for _, y in pos_t)
 
         # The message appears when points are less spread along the y-axis
@@ -36,9 +36,9 @@ def evolve(data, print_t=False):
 
     # The break condition becomes true one time step after the message
     # appears, so we print t - 1 to correct for that off-by-one.
-    if print_t: 
+    if print_t:
         return t - 1
-    
+
     return visualize(pos)
 
 
@@ -48,17 +48,17 @@ def visualize(pos):
     min_x, max_x = min(pos_x), max(pos_x)
     min_y, max_y = min(pos_y), max(pos_y)
 
-    grid = [["." for _ in range(min_x, max_x+1)] for _ in range(min_y, max_y+1)]
+    grid = [["." for _ in range(min_x, max_x + 1)] for _ in range(min_y, max_y + 1)]
     for x, y in pos:
-        grid[y-min_y][x-min_x] = "#"
-    
+        grid[y - min_y][x - min_x] = "#"
+
     return "\n".join("".join(row) for row in grid)
 
 
 @timer
 def part1(data):
     return evolve(data)
-        
+
 
 @timer
 def part2(data):
@@ -79,4 +79,3 @@ def main(example: bool):
 
 if __name__ == "__main__":
     main()
-

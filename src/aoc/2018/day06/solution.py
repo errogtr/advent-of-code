@@ -6,7 +6,7 @@ from aoc.utils import read_data, timer
 Coords = tuple[int, int]
 
 
-def get_coordinates(data) -> tuple[list[Coords], int, int]: 
+def get_coordinates(data) -> tuple[list[Coords], int, int]:
     coordinates = list()
     max_x, max_y = 0, 0
     for coords_raw in data.splitlines():
@@ -21,7 +21,7 @@ def get_coordinates(data) -> tuple[list[Coords], int, int]:
 def part1(data):
     coordinates, max_x, max_y = get_coordinates(data)
     closest = [set() for _ in range(len(coordinates))]
-    for x, y in product(range(max_x+1), range(max_y+1)):
+    for x, y in product(range(max_x + 1), range(max_y + 1)):
         distances = list()
 
         for X, Y in coordinates:
@@ -33,7 +33,7 @@ def part1(data):
 
     largest_finite_area = 0
     for region in closest:
-        for (x, y) in region:
+        for x, y in region:
             if x == 0 or y == 0 or x == max_x or y == max_y:
                 break
         else:
@@ -47,10 +47,10 @@ def part2(data, max_dist):
     coordinates, max_x, max_y = get_coordinates(data)
 
     region = 0
-    for x, y in product(range(max_x+1), range(max_y+1)):
+    for x, y in product(range(max_x + 1), range(max_y + 1)):
         if sum(abs(x - X) + abs(y - Y) for X, Y in coordinates) < max_dist:
             region += 1
-    
+
     return region
 
 
@@ -69,4 +69,3 @@ def main(example: bool):
 
 if __name__ == "__main__":
     main()
-
