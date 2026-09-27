@@ -1,4 +1,4 @@
-from typing import Counter
+from copy import copy
 import click
 from aoc.utils import read_data, timer
 
@@ -35,13 +35,22 @@ def parse(data):
             elif val != " ":
                 carts.append((z, dirs[val], L))
                 track[z] = overlaps[val]
-    carts = sorted(carts, key=lambda cart: cart[0].imag)
     return track, carts
 
 
-def tick(track, carts):
-    next_carts = []
-    for pos, direction, cross in carts:
+def tick(track, carts, remove_crashed=True):
+    carts = sorted(carts, key=lambda cart: (cart[0].imag, cart[0].real))
+    next_carts = copy(carts)
+
+    occupied = {pos: i for i, (pos, _, _) in enumerate(carts)}
+    crashed = set()
+    crash_pos = None
+
+    for i, (pos, direction, cross) in enumerate(carts):
+        if i in crashed:
+            continue
+        del occupied[pos]
+
         next_pos = pos + direction
         next_track = track[next_pos]
         if next_track in ("\\", "/"):
@@ -53,8 +62,21 @@ def tick(track, carts):
         else:
             next_direction = direction
             next_cross = cross
-        next_carts.append((next_pos, next_direction, next_cross))
-    return sorted(next_carts, key=lambda cart: cart[0].imag)
+
+        if next_pos in occupied:
+            crash_pos = next_pos
+            j = occupied.pop(crash_pos)
+            crashed |= {i, j}
+            if not remove_crashed:
+                return carts, crash_pos
+        else:
+            occupied[next_pos] = i
+            next_carts[i] = (next_pos, next_direction, next_cross)
+
+    if remove_crashed:
+        next_carts = [cart for i, cart in enumerate(next_carts) if i not in crashed]
+
+    return next_carts, crash_pos
 
 
 @timer
@@ -62,11 +84,9 @@ def part1(data):
     track, carts = parse(data)
 
     while True:
-        carts = tick(track, carts)
-        pos_counter = Counter(cart[0] for cart in carts)
-        if any(c > 1 for c in pos_counter.values()):
-            crash = pos_counter.most_common(1)[0][0]
-            return f"{int(crash.real)},{int(crash.imag)}"
+        carts, crash_pos = tick(track, carts)
+        if crash_pos is not None:
+            return f"{int(crash_pos.real)},{int(crash_pos.imag)}"
 
 
 @timer
@@ -74,16 +94,7 @@ def part2(data):
     track, carts = parse(data)
 
     while len(carts) > 1:
-        carts = tick(track, carts)
-
-        counts = Counter(cart[0] for cart in carts)
-        crashes = list()
-        for i, cart in enumerate(carts):
-            pos, *_ = cart
-            if counts[pos] > 1:
-                crashes.append(i)
-
-        carts = [cart for i, cart in enumerate(carts) if i not in crashes]
+        carts, _ = tick(track, carts)
 
     remaining, *_ = carts[0]
     return f"{int(remaining.real)},{int(remaining.imag)}"
