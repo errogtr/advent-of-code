@@ -1,6 +1,6 @@
-from copy import copy
 import click
 from aoc.utils import read_data, timer
+
 
 # fmt: off
 # Turn rules
@@ -40,7 +40,7 @@ def parse(data):
 
 def tick(track, carts, remove_crashed=True):
     carts = sorted(carts, key=lambda cart: (cart[0].imag, cart[0].real))
-    next_carts = copy(carts)
+    next_carts = [None] * len(carts)
 
     occupied = {pos: i for i, (pos, _, _) in enumerate(carts)}
     crashed = set()
