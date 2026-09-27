@@ -1,4 +1,3 @@
-from itertools import product
 from typing import Counter
 import click
 from aoc.utils import read_data, timer
@@ -22,11 +21,11 @@ ROTATIONS = {L: S, S: R, R : L}
 
 
 def parse(data):
-    # Assumption: carts never starts on turns ('/', '\') or crossings ('+'). This is 
+    # Assumption: carts never starts on turns ('/', '\') or crossings ('+'). This is
     #             true for my input, but I can't be sure the same holds for everyone
     overlaps = {"^": "|", "v": "|", ">": "-", "<": "-"}
     dirs = {">": 1, "<": -1, "^": -1j, "v": 1j}
-    
+
     track, carts = {}, []
     for y, line in enumerate(data.splitlines()):
         for x, val in enumerate(line):
@@ -56,7 +55,7 @@ def tick(track, carts):
             next_cross = cross
         next_carts.append((next_pos, next_direction, next_cross))
     return sorted(next_carts, key=lambda cart: cart[0].imag)
-    
+
 
 @timer
 def part1(data):
@@ -68,7 +67,7 @@ def part1(data):
         if any(c > 1 for c in pos_counter.values()):
             crash = pos_counter.most_common(1)[0][0]
             return f"{int(crash.real)},{int(crash.imag)}"
-        
+
 
 @timer
 def part2(data):
@@ -83,9 +82,9 @@ def part2(data):
             pos, *_ = cart
             if counts[pos] > 1:
                 crashes.append(i)
-        
+
         carts = [cart for i, cart in enumerate(carts) if i not in crashes]
-    
+
     remaining, *_ = carts[0]
     return f"{int(remaining.real)},{int(remaining.imag)}"
 
