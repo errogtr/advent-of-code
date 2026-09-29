@@ -1,4 +1,3 @@
-from copy import copy
 import heapq
 import click
 from aoc.utils import read_data, timer
@@ -48,13 +47,13 @@ def find_paths(start, end, allowed, neighbors):
     if is_blocked:
         return None
     
-    current = end
+    path = [end]
     while True:
-        move_to = came_from[current]
+        move_to = came_from[path[-1]]
         if move_to == start:
             break
-        current = move_to
-    return length, current
+        path.append(move_to)
+    return length, path
 
 
 def print_grid(elves, goblins, walls):
@@ -79,29 +78,35 @@ def print_grid(elves, goblins, walls):
 @timer
 def part1(data):
     elves, goblins, walls, cavern = parse(data)
-    print_grid(elves, goblins, walls)
+    # print_grid(elves, goblins, walls)
     neighbors = {z: nn(*z) for z in set(elves) | set(goblins) | cavern}
     rounds = 0
+    finish = False
     while True:
-        next_goblins = copy(goblins)
-        next_cavern = copy(cavern)
-        next_elves = copy(elves)
         for unit in sorted(elves | goblins, key=lambda z: (z[1], z[0])):
+            elves = {z: hp for z, hp in elves.items() if hp > 0}
+            goblins = {z: hp for z, hp in goblins.items() if hp > 0}
+            if unit not in elves | goblins:
+                continue
+            
             is_elf = unit in elves
-            targets = next_goblins if is_elf else next_elves
+            targets = goblins if is_elf else elves
 
             if not targets:
+                finish = True
                 break
 
             # Check if unit is in range of an adjacent target
-            in_range_of = None
+            in_range_of = list()
             for z in neighbors[unit]:
                 if z in targets:
-                    in_range_of = z
-                    break
+                    in_range_of.append((targets[z], z))
             
-            if in_range_of:  # attack
-                targets[in_range_of] -= 3
+            if in_range_of:
+                _, to_attack = min(in_range_of, key=lambda p: (p[0], p[1][1], p[1][0]))
+                targets[to_attack] -= 3
+                if targets[to_attack] <= 0:
+                    cavern.add(to_attack)
                 continue
             
             # Get positions in range for all targets
@@ -113,42 +118,46 @@ def part1(data):
                 continue
 
             # Get all paths from unit to target units
-            if unit == (3, 4):
-                pass
+            print("Round:", rounds, "; ", "Unit:", unit)
             paths = list()
             for target in in_range:
                 path = find_paths(unit, target, cavern, neighbors)
                 if path:
                     paths.append(path)
+            print("Path trovati: ", len(paths))
             
             if not paths:
                 continue
 
-            _, move_to = min(paths, key=lambda p: (p[0], p[1][1], p[1][0]))
-            next_cavern.remove(move_to)
-            next_cavern.add(unit)
+            if len(paths) > 1:
+                pass
+
+            _, min_path = min(paths, key=lambda p: (p[0], p[1][0][1], p[1][0][0]))
+            move_to = min_path[-1]
+            cavern.remove(move_to)
+            cavern.add(unit)
             if is_elf:
-                next_elves[move_to] = next_elves.pop(unit)
+                elves[move_to] = elves.pop(unit)
             else:  # is_goblin
-                next_goblins[move_to] = next_goblins.pop(unit)
+                goblins[move_to] = goblins.pop(unit)
 
-            print_grid(next_elves, next_goblins, walls)
-            pass
+            in_range_of = list()
+            for z in neighbors[move_to]:
+                if z in targets:
+                    in_range_of.append((targets[z], z))
+            
+            if in_range_of:
+                _, to_attack = min(in_range_of, key=lambda p: (p[0], p[1][1], p[1][0]))
+                targets[to_attack] -= 3
+                if targets[to_attack] <= 0:
+                    cavern.add(to_attack)
 
-        next_elves = {z: hp for z, hp in next_elves.items() if hp > 0}
-        next_goblins = {z: hp for z, hp in next_goblins.items() if hp > 0}
-        if len(next_goblins) == 0 or len(next_elves) == 0:
+        # print_grid(elves, goblins, walls)
+        if finish:
             break
+
         rounds += 1
 
-        goblins = next_goblins
-        elves = next_elves
-        cavern = next_cavern
-
-        if rounds in (1, 2, 23, 24, 25, 26, 27, 28, 48):
-            pass
-        # if rounds in (0, 1, 22, 23, 24, 25, 26, 27, 47):
-        #     pass
 
     if elves:
         outcome = rounds * sum(elves.values())
@@ -169,7 +178,13 @@ def main(example: bool):
     data = read_data(__file__, example)
 
     # ==== PART 1 ====
-    print(part1(data))
+    if example:
+        for ex in data.split("\n\n"):
+            data = "\n".join(ex.splitlines()[:-1])
+            ans = int(ex.splitlines()[-1])
+            print(part1(data)==ans)
+    else:
+        print(part1(data))
 
     # ==== PART 2 ====
     print(part2())
